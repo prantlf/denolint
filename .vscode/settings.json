@@ -3,12 +3,13 @@
     "**/.git": true,
     "**/.DS_Store": true,
     "packages/denolint/denolint": true,
-    "packages/**/*/*.node": true
+    "packages/**/*.node": true,
+    "packages/denolint/**/denolint": true
   },
   "search.exclude": {
     "**/node_modules": true,
-    "**/npm": true,
     "**/target": true,
-    "packages/libdenolint/index.d.ts": true
+    "packages/*/index.d.ts": true,
+    "packages/*/npm": true
   }
 }

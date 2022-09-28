@@ -2,8 +2,8 @@
 Cargo.lock
 *.log
 node_modules
+packages/*/index.d.ts
 packages/*/npm
-packages/denolint/denolint
-packages/libdenolint/index.d.ts
-packages/libdenolint/libdenolint.node
+packages/**/*.node
+packages/denolint/**/denolint
 target

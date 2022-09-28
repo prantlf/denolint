@@ -1,0 +1,292 @@
+name: CI
+
+env:
+  DEBUG: 'napi:*'
+  MACOSX_DEPLOYMENT_TARGET: '10.13'
+  NODE_OPTIONS: '--max-old-space-size=3072'
+  CARGO_UNSTABLE_TARGET_APPLIES_TO_HOST: true
+  CARGO_TARGET_APPLIES_TO_HOST: false
+
+on:
+  push:
+    branches:
+      - master
+    tags-ignore:
+      - '**'
+    paths-ignore:
+      - '**/*.md'
+      - LICENSE
+      - '.*'
+      - '.github/workflows/lint.yml'
+  pull_request:
+
+jobs:
+
+  build:
+    if: "!contains(github.event.head_commit.message, 'skip ci')"
+
+    strategy:
+      fail-fast: false
+      matrix:
+        settings:
+          - host: macos-latest
+            target: x86_64-apple-darwin
+            build: |
+              cargo build --release
+              strip -x target/release/*.dylib
+              strip target/release/denolint
+              pnpm -r run copy:target
+
+          - host: windows-latest
+            target: x86_64-pc-windows-msvc
+            build: |
+              cargo build --release
+              pnpm -r run copy:target
+
+          - host: ubuntu-latest
+            target: x86_64-unknown-linux-gnu
+            build: |
+              cargo build --release
+              strip target/release/*.so target/release/denolint
+              pnpm -r run copy:target
+
+          - host: macos-latest
+            target: aarch64-apple-darwin
+            build: |
+              sudo rm -Rf /Library/Developer/CommandLineTools/SDKs/*;
+              export CC=$(xcrun -f clang);
+              export CXX=$(xcrun -f clang++);
+              SYSROOT=$(xcrun --sdk macosx --show-sdk-path);
+              export CFLAGS="-isysroot $SYSROOT -isystem $SYSROOT";
+              cargo build --release --target aarch64-apple-darwin
+              strip -x target/aarch64-apple-darwin/release/*.dylib
+              strip target/aarch64-apple-darwin/release/denolint
+              pnpm -r run copy:target aarch64-apple-darwin
+
+          - host: windows-latest
+            target: aarch64-pc-windows-msvc
+            build: |
+              cargo build --release --target aarch64-pc-windows-msvc
+              pnpm -r run copy:target aarch64-pc-windows-msvc
+
+    name: build-${{ matrix.settings.target }}
+    runs-on: ${{ matrix.settings.host }}
+
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v3
+
+      - name: Install PNPM
+        uses: pnpm/action-setup@v2
+        with:
+          version: '7'
+
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          check-latest: true
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Install Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          override: true
+          target: ${{ matrix.settings.target }}
+
+      - name: Generate Cargo.lock
+        uses: actions-rs/cargo@v1
+        with:
+          command: generate-lockfile
+
+      - name: Cache cargo registry
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cargo/bin/
+            ~/.cargo/registry/index/
+            ~/.cargo/registry/cache/
+            ~/.cargo/git/db/
+            .cargo-cache
+            target/
+          key: ${{ matrix.settings.target }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: ${{ matrix.settings.target }}-cargo-
+
+      - name: Cache NPM dependencies
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: ${{ matrix.settings.target }}-npm-16-${{ hashFiles('pnpm-lock.yaml') }}
+
+      - name: Setup toolchain
+        run: ${{ matrix.settings.setup }}
+        if: ${{ matrix.settings.setup }}
+        shell: bash
+
+      - name: Setup node x86
+        if: matrix.settings.target == 'i686-pc-windows-msvc'
+        run: pnpm config set supportedArchitectures.cpu "ia32"
+        shell: bash
+
+      - name: Install NPM dependencies
+        run: pnpm i --frozen-lockfile --no-verify-store-integrity
+
+      - name: Build
+        run: ${{ matrix.settings.build }}
+        shell: bash
+
+      - name: List packages
+        run: ls -R packages
+        shell: bash
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ matrix.settings.target }}
+          path: |
+            packages/*/*.node
+            packages/denolint/denolint*
+          if-no-files-found: error
+
+  test:
+
+    needs:
+      - build
+
+    strategy:
+      fail-fast: false
+      matrix:
+        settings:
+          - host: macos-latest
+            target: x86_64-apple-darwin
+          - host: windows-latest
+            target: x86_64-pc-windows-msvc
+          - host: ubuntu-latest
+            target: x86_64-unknown-linux-gnu
+          # - host: macos-latest
+          #   target: aarch64-apple-darwin
+          # - host: windows-latest
+          #   target: aarch64-pc-windows-msvc
+        node:
+          - '14'
+          - '16'
+          - '18'
+
+    name: test-${{ matrix.settings.target }}-node@${{ matrix.node }}
+    runs-on: ${{ matrix.settings.host }}
+
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v3
+
+      - name: Install PNPM
+        uses: pnpm/action-setup@v2
+        with:
+          version: '7'
+
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node }}
+          check-latest: true
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Cache NPM dependencies
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: ${{ matrix.settings.target }}-npm-${{ matrix.node }}-${{ hashFiles('pnpm-lock.yaml') }}
+
+      - name: Install NPM dependencies
+        run: pnpm i --frozen-lockfile --no-verify-store-integrity
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: ${{ matrix.settings.target }}
+          path: artifacts
+
+      - name: List artifacts
+        run: ls -R artifacts
+        shell: bash
+
+      - name: Move artifacts
+        run: pnpm -r run move:artifact
+        shell: bash
+
+      - name: List packages
+        run: ls -R packages
+        shell: bash
+
+      - name: Test
+        run: pnpm -r test
+
+      - name: Test on Windows
+        if: "contains(matrix.settings.target, 'windows')"
+        run: pnpm -r test:win32
+
+      - name: Test on others
+        if: "!contains(matrix.settings.target, 'windows')"
+        run: pnpm -r test:other
+
+  publish:
+    # if: "startsWith(github.event.head_commit.message, 'chore(release): publish')"
+
+    needs:
+      - test
+
+    name: publish
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v3
+
+      - name: Install PNPM
+        uses: pnpm/action-setup@v2
+        with:
+          version: '7'
+
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          check-latest: true
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+
+      - name: Cache NPM dependencies
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: x86_64-unknown-linux-gnu-npm-16-${{ hashFiles('pnpm-lock.yaml') }}
+
+      - name: Install NPM dependencies
+        run: pnpm i --frozen-lockfile --no-verify-store-integrity
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v3
+        with:
+          path: artifacts
+
+      - name: PNPM publish
+        run: |
+          find ./packages/ -type d -maxdepth 1 -exec cp LICENSE {} \;
+          echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
+          pnpm -r publish --no-git-checks
+          cd packages/denolint/npm/win32-x64-msvc && pnpm publish --no-git-checks && cd ../../../..
+          cd packages/denolint/npm/darwin-x64 && pnpm publish --no-git-checks && cd ../../../..
+          cd packages/denolint/npm/linux-x64-gnu && pnpm publish --no-git-checks && cd ../../../..
+          cd packages/denolint/npm/darwin-arm64 && pnpm publish --no-git-checks && cd ../../../..
+          cd packages/denolint/npm/win32-arm64-msvc && pnpm publish --no-git-checks && cd ../../../..
+          cd packages/libdenolint/npm/win32-x64-msvc && pnpm publish --no-git-checks && cd ../../../..
+          cd packages/libdenolint/npm/darwin-x64 && pnpm publish --no-git-checks && cd ../../../..
+          cd packages/libdenolint/npm/linux-x64-gnu && pnpm publish --no-git-checks && cd ../../../..
+          cd packages/libdenolint/npm/darwin-arm64 && pnpm publish --no-git-checks && cd ../../../..
+          cd packages/libdenolint/npm/win32-arm64-msvc && pnpm publish --no-git-checks && cd ../../../..
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
