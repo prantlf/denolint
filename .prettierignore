@@ -1,4 +1,6 @@
 *.d.ts
+*.json
+*.md
 crates
 node_modules
 target

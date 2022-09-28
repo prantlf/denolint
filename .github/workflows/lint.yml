@@ -1,0 +1,78 @@
+name: Lint
+
+on:
+  push:
+    branches:
+      - master
+    tags-ignore:
+      - '**'
+    paths-ignore:
+      - '**/*.md'
+      - LICENSE
+      - '.*'
+      - '.github/workflows/ci.yml'
+  pull_request:
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v3
+
+      - name: Install PNPM
+        uses: pnpm/action-setup@v2
+        with:
+          version: '7'
+
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          check-latest: true
+
+      - name: Install Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          override: true
+          components: rustfmt, clippy
+
+      - name: Install NPM dependencies
+        run: pnpm i --frozen-lockfile --no-verify-store-integrity
+
+      - name: ESLint
+        run: pnpm run lint
+
+      - name: Cargo fmt
+        run: cargo fmt --all -- --check
+
+      - name: Cargo clippy
+        run: cargo clippy -- -D warnings
+
+      # - name: Cargo deny
+      #   run: |
+      #     cargo install cargo-deny
+      #     cargo deny check
+
+      - name: Cargo outdated
+        run: |
+          cargo install cargo-outdated
+          cargo outdated --exit-code 1
+
+      # - name: Cargo udeps
+      #   run: |
+      #     cargo install cargo-udeps
+      #     cargo udeps
+
+      - name: Cargo audit
+        run: |
+          cargo install cargo-audit
+          rm -rf ~/.cargo/advisory-db
+          cargo audit
+
+      - name: Cargo pants
+        run: |
+          cargo install cargo-pants
+          cargo pants
