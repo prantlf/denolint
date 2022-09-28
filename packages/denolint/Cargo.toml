@@ -1,0 +1,8 @@
+[package]
+name = "denolint"
+version = "1.0.0"
+edition = "2021"
+
+[dependencies]
+global_alloc = { path = "../../crates/alloc" }
+shared = { path = "../../crates/shared" }

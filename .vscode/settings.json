@@ -1,0 +1,14 @@
+{
+  "files.exclude": {
+    "**/.git": true,
+    "**/.DS_Store": true,
+    "packages/denolint/denolint": true,
+    "packages/**/*/*.node": true
+  },
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/npm": true,
+    "**/target": true,
+    "packages/libdenolint/index.d.ts": true
+  }
+}

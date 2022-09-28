@@ -1,0 +1,10 @@
+cargo-features = ["strip"]
+
+[workspace]
+members = ["./packages/denolint", "./packages/libdenolint"]
+
+[profile.release]
+codegen-units = 4
+lto = true
+overflow-checks = false
+strip = 'symbols'

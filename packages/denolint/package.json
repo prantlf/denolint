@@ -1,0 +1,75 @@
+{
+  "name": "denolint",
+  "description": "Deno lint command-line executable for Node.js",
+  "version": "1.0.0",
+  "homepage": "https://github.com/prantlf/denolint#readme",
+  "author": "Ferdinand Prantl <prantlf@gmail.com>",
+  "contributors": [
+    "LongYinan <lynweklm@gmail.com>"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/prantlf/denolint.git"
+  },
+  "bugs": {
+    "url": "https://github.com/prantlf/denolint/issues"
+  },
+  "license": "MIT",
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/prantlf/denolint/blob/master/LICENSE"
+    }
+  ],
+  "engines": {
+    "node": ">= 12"
+  },
+  "type": "module",
+  "scripts": {
+    "prepare": "node scripts/set-version && napi create-npm-dir -t .",
+    "artifacts": "node scripts/prepare-npm",
+    "build": "napi build --release",
+    "build:debug": "napi build",
+    "test": "./denolint -p ../../crates/shared/test/pass && ./denolint -p ../../crates/shared/test/warn || ./denolint -p ../../crates/shared/test/fail || ./denolint -h && ./denolint -V",
+    "prepublishOnly": "napi prepublish",
+    "version": "napi version"
+  },
+  "napi": {
+    "name": "denolint",
+    "triples": {
+      "defaults": false,
+      "additional": [
+        "x86_64-pc-windows-msvc",
+        "x86_64-apple-darwin",
+        "x86_64-unknown-linux-gnu",
+        "i686-pc-windows-msvc",
+        "armv7-unknown-linux-gnueabihf",
+        "x86_64-unknown-linux-musl",
+        "aarch64-unknown-linux-gnu",
+        "aarch64-apple-darwin",
+        "aarch64-linux-android",
+        "armv7-linux-androideabi",
+        "x86_64-unknown-freebsd",
+        "aarch64-unknown-linux-musl",
+        "aarch64-pc-windows-msvc"
+      ]
+    },
+    "package": {
+      "name": "@denolint/denolint"
+    }
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
+  },
+  "keywords": [
+    "deno-lint",
+    "deno",
+    "lint",
+    "eslint",
+    "napi-rs",
+    "napi",
+    "n-api",
+    "rust"
+  ]
+}

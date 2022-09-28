@@ -1,0 +1,18 @@
+[package]
+name = "libdenolint"
+version = "1.0.0"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+deno_lint = "0.33.0"
+global_alloc = { path = "../../crates/alloc" }
+# Default enable napi4 feature, see https://nodejs.org/api/n-api.html#node-api-version-matrix
+napi = { version = "2.9.1", default-features = false, features = ["napi4"] }
+napi-derive = "2.9.1"
+shared = { path = "../../crates/shared" }
+
+[build-dependencies]
+napi-build = "2.0.1"

@@ -1,0 +1,93 @@
+{
+  "name": "libdenolint",
+  "version": "1.0.0",
+  "description": "Deno lint library binding for Node.js",
+  "homepage": "https://github.com/prantlf/denolint#readme",
+  "author": "Ferdinand Prantl <prantlf@gmail.com>",
+  "contributors": [
+    "LongYinan <lynweklm@gmail.com>"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/prantlf/denolint.git"
+  },
+  "bugs": {
+    "url": "https://github.com/prantlf/denolint/issues"
+  },
+  "license": "MIT",
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/prantlf/denolint/blob/master/LICENSE"
+    }
+  ],
+  "engines": {
+    "node": ">= 12"
+  },
+  "type": "module",
+  "main": "libdenolint.node",
+  "module": "lib/index.mjs",
+  "types": "lib/index.d.ts",
+  "exports": {
+    "require": "./libdenolint.node",
+    "import": "./lib/index.mjs"
+  },
+  "files": [
+    "lib"
+  ],
+  "scripts": {
+    "postinstall": "node lib/postinstall.cjs",
+    "prepare": "napi create-npm-dir -t .",
+    "artifacts": "node scripts/prepare-npm",
+    "build": "napi build --release && strip -x libdenolint.node",
+    "build:debug": "napi build",
+    "test": "teru-esm test/*.cjs && teru-esm test/*.mjs",
+    "prepublishOnly": "napi prepublish",
+    "version": "napi version"
+  },
+  "napi": {
+    "name": "libdenolint",
+    "triples": {
+      "defaults": false,
+      "additional": [
+        "x86_64-pc-windows-msvc",
+        "x86_64-apple-darwin",
+        "x86_64-unknown-linux-gnu",
+        "i686-pc-windows-msvc",
+        "armv7-unknown-linux-gnueabihf",
+        "x86_64-unknown-linux-musl",
+        "aarch64-unknown-linux-gnu",
+        "aarch64-apple-darwin",
+        "aarch64-linux-android",
+        "armv7-linux-androideabi",
+        "x86_64-unknown-freebsd",
+        "aarch64-unknown-linux-musl",
+        "aarch64-pc-windows-msvc"
+      ]
+    },
+    "package": {
+      "name": "@denolint/libdenolint"
+    }
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/",
+    "access": "public"
+  },
+  "devDependencies": {
+    "libdenolint": "link:",
+    "tehanu": "^1.0.1",
+    "tehanu-repo-coco": "^1.0.0",
+    "tehanu-teru": "^1.0.0"
+  },
+  "keywords": [
+    "deno-lint",
+    "denolint",
+    "deno",
+    "lint",
+    "eslint",
+    "napi-rs",
+    "napi",
+    "n-api",
+    "rust"
+  ]
+}
