@@ -51,11 +51,11 @@ test('async denolint passes', async () => {
 })
 
 test('async denolint warns', async () => {
-  ok(!await denolint(join(files, 'warn')))
+  ok(!(await denolint(join(files, 'warn'))))
 })
 
 test('async denolint fails', async () => {
-  ok(!await denolint(join(files, 'fail')))
+  ok(!(await denolint(join(files, 'fail'))))
 })
 
 test('sync denolint passes', async () => {

@@ -17,7 +17,7 @@ const platforms = {
   'android-arm-eabi': 'armv7-linux-androideabi',
   'freebsd-x64': 'x86_64-unknown-freebsd',
   'linux-arm64-musl': 'aarch64-unknown-linux-musl',
-  'win32-arm64-msvc': 'aarch64-pc-windows-msvc'
+  'win32-arm64-msvc': 'aarch64-pc-windows-msvc',
 }
 
 function getExeSuffix(dir) {
