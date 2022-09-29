@@ -10,3 +10,9 @@ for dir in packages/denolint/npm/*; do
   pnpm publish --no-git-checks
   cd ../../../..
 done
+
+for dir in packages/libdenolint/npm/*; do
+  cd packages/libdenolint/npm/win32-x64-msvc
+  pnpm publish --no-git-checks
+  cd ../../../..
+done
