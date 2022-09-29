@@ -1,3 +1,9 @@
+## [1.0.83](https://github.com/prantlf/denolint/compare/v1.0.82...v1.0.83) (2022-09-29)
+
+### Bug Fixes
+
+* **denolint:** Work around for missing executable permissions ([190ec5a](https://github.com/prantlf/denolint/commit/190ec5a53e7397be4eb928c8509a08403d00b25a))
+
 ## [1.0.82](https://github.com/prantlf/denolint/compare/v1.0.3...v1.0.82) (2022-09-29)
 
 ### Bug Fixes
