@@ -61,10 +61,10 @@ See more information about the packages and their compatibility with [@node-rs/d
 
 [deno_lint]: https://github.com/denoland/deno_lint
 [customised @node-rs/deno-lint]: https://github.com/prantlf/node-rs/commits/combined
-[@node-rs/deno-lint]: https://github.com/napi-rs/node-rs/tree/main/packages/deno-lint
-[denolint]: https://github.com/prantlf/denolint/tree/master/packages/denolint
+[@node-rs/deno-lint]: https://github.com/napi-rs/node-rs/tree/main/packages/deno-lint#readme
+[denolint]: https://github.com/prantlf/denolint/tree/master/packages/denolint#readme
 [cmd]: https://www.npmjs.com/package/denolint
-[libdenolint]: https://github.com/prantlf/denolint/tree/master/packages/libdenolint
+[libdenolint]: https://github.com/prantlf/denolint/tree/master/packages/libdenolint#readme
 [lib]: https://www.npmjs.com/package/libdenolint
 [630]: https://github.com/napi-rs/node-rs/issues/630
 [631]: https://github.com/napi-rs/node-rs/issues/631

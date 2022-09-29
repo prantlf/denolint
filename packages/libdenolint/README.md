@@ -205,9 +205,9 @@ Methods `denolint` and `denolintSync` return `boolean` (or a `Promise` to a `boo
 | Android armv7    | ✓      | ✓      | ✓      |
 | FreeBSD x64      | ✓      | ✓      | ✓      |
 
-[deno lint]: https://github.com/denoland/deno_lint
+[deno lint]: https://github.com/denoland/deno_lint#readme
 [customised @node-rs/deno-lint]: https://github.com/prantlf/node-rs/commits/combined
-[@node-rs/deno-lint]: https://github.com/napi-rs/node-rs/tree/main/packages/deno-lint
+[@node-rs/deno-lint]: https://github.com/napi-rs/node-rs/tree/main/packages/deno-lint#readme
 [deno_lint rules]: https://github.com/denoland/deno_lint/tree/main/docs/rules
 [630]: https://github.com/napi-rs/node-rs/issues/630
 [631]: https://github.com/napi-rs/node-rs/issues/631

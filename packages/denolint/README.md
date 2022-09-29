@@ -84,7 +84,14 @@ If you specified the project root directory, do it using the `-p, --project` arg
 + npx denolint -p package/cmd
 ```
 
-The argument `--check-only` is not supported. If you needed to ignore the exit code, use an additional executable or shell alias, which exits successfully, for example:
+If you used the `-r, --root` argument from the [customised @node-rs/deno-lint], change it to the `-p, --project` argument:
+
+```diff
+- denolint -r package/cmd
++ denolint -p package/cmd
+```
+
+The argument `--check-only` known from [@node-rs/deno-lint] is not supported. If you needed to ignore the exit code, use an additional executable or shell alias, which exits successfully, for example:
 
 ```diff
 - npx denolint--check-only
@@ -109,8 +116,9 @@ The argument `--check-only` is not supported. If you needed to ignore the exit c
 | Android armv7    | ✓      | ✓      | ✓      |
 | FreeBSD x64      | ✓      | ✓      | ✓      |
 
-[deno lint]: https://github.com/denoland/deno_lint
+[deno lint]: https://github.com/denoland/deno_lint#readme
 [customised @node-rs/deno-lint]: https://github.com/prantlf/node-rs/commits/combined
+[@node-rs/deno-lint]: https://github.com/napi-rs/node-rs/tree/main/packages/deno-lint#readme
 [deno_lint rules]: https://github.com/denoland/deno_lint/tree/main/docs/rules
 [630]: https://github.com/napi-rs/node-rs/issues/630
 [631]: https://github.com/napi-rs/node-rs/issues/631
