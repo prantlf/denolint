@@ -4,7 +4,7 @@ import { fileURLToPath } from 'url'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const { argv, platform } = process
-const [,, cross] = argv
+const [, , cross] = argv
 
 const exeSuffix = platform === 'win32' ? '.exe' : ''
 const exeName = `denolint${exeSuffix}`

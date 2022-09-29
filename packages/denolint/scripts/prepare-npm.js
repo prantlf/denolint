@@ -58,12 +58,10 @@ async function fixDeps() {
   const pkgFile = join(__dirname, '../package.json')
   const pkg = JSON.parse(await readFile(pkgFile, 'utf8'))
   const { version } = pkg
-  pkg.optionalDependencies = Object
-    .keys(platforms)
-    .reduce((deps, dir) => {
-      deps[`@denolint/denolint-${dir}`] = version
-      return deps
-    }, {})
+  pkg.optionalDependencies = Object.keys(platforms).reduce((deps, dir) => {
+    deps[`@denolint/denolint-${dir}`] = version
+    return deps
+  }, {})
   await writeFile(pkgFile, JSON.stringify(pkg, undefined, 2))
 }
 
