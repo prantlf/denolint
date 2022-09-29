@@ -1,4 +1,4 @@
-const { access, symlink } = require('fs/promises')
+const { mkdirSync, readFileSync, symlinkSync } = require('fs')
 const { join } = require('path')
 
 const { platform, arch, env } = process
@@ -32,23 +32,19 @@ const platforms = {
   },
 }
 
-;(async () => {
-  try {
-    const archs = platforms[platform]
-    if (!archs) throw new Error(`Unsupported platform: ${platform}`)
-    const suffix = archs[arch]
-    if (!suffix) throw new Error(`Unsupported architecture: ${arch}`)
-    const exeSuffix = platform === 'win32' ? '.exe' : ''
-    const exeName = `denolint${exeSuffix}`
-    const modDir = `${env.INIT_CWD}/node_modules`
-    const link = join(modDir, `.bin/${exeName}`)
-    try {
-      await access(link)
-    } catch {
-      const target = join(modDir, `@denolint/denolint-${platform}-${suffix()}/${exeName}`)
-      await symlink(target, link, 'junction')
-    }
-  } catch ({ message }) {
-    console.error(message)
-  }
-})()
+const pkgFile = join(__dirname, '../package.json')
+const { optionalDependencies } = JSON.parse(readFileSync(pkgFile, 'utf8'))
+if (optionalDependencies) {
+  const archs = platforms[platform]
+  if (!archs) throw new Error(`Unsupported platform: ${platform}`)
+  const suffix = archs[arch]
+  if (!suffix) throw new Error(`Unsupported architecture: ${arch}`)
+  const exeSuffix = platform === 'win32' ? '.exe' : ''
+  const exeName = `denolint${exeSuffix}`
+  const modDir = `${env.INIT_CWD}/node_modules`
+  const binDir = join(modDir, '.bin')
+  const link = join(binDir, exeName)
+  mkdirSync(binDir, { recursive: true })
+  const target = join(modDir, `@denolint/denolint-${platform}-${suffix()}/${exeName}`)
+  symlinkSync(target, link, 'junction')
+}

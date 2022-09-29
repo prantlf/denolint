@@ -30,7 +30,7 @@ async function fixReadme(dir) {
   await writeFile(readmeFile, readme)
 }
 
-async function fixMain(dir) {
+async function fixFiles(dir) {
   const pkgFile = join(__dirname, '../npm', dir, 'package.json')
   const pkg = JSON.parse(await readFile(pkgFile, 'utf8'))
   pkg.files = ['libdenolint.node']
@@ -56,6 +56,6 @@ async function fixDeps() {
 }
 
 const readme = Object.keys(platforms).map(fixReadme)
-const added = Object.keys(platforms).map(fixMain)
+const added = Object.keys(platforms).map(fixFiles)
 const copied = Object.keys(platforms).map(moveLib)
 await Promise.all([...readme, ...added, ...copied, fixDeps()])

@@ -34,13 +34,12 @@ async function fixReadme(dir) {
   await writeFile(readmeFile, readme)
 }
 
-async function fixBin(dir) {
+async function fixFiles(dir) {
   const pkgFile = join(__dirname, '../npm', dir, 'package.json')
   const pkg = JSON.parse(await readFile(pkgFile, 'utf8'))
   delete pkg.main
   const exeName = `denolint${getExeSuffix(dir)}`
   pkg.files = [exeName]
-  pkg.bin = { denolint: exeName }
   await writeFile(pkgFile, JSON.stringify(pkg, undefined, 2))
 }
 
@@ -66,6 +65,6 @@ async function fixDeps() {
 }
 
 const readme = Object.keys(platforms).map(fixReadme)
-const added = Object.keys(platforms).map(fixBin)
+const added = Object.keys(platforms).map(fixFiles)
 const copied = Object.keys(platforms).map(moveExe)
 await Promise.all([...readme, ...added, ...copied, fixDeps()])

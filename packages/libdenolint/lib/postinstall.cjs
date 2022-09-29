@@ -1,4 +1,4 @@
-const { rename } = require('fs/promises')
+const { readFileSync, renameSync } = require('fs')
 const { join } = require('path')
 
 const { platform, arch } = process
@@ -32,16 +32,14 @@ const platforms = {
   },
 }
 
-;(async () => {
-  try {
-    const archs = platforms[platform]
-    if (!archs) throw new Error(`Unsupported platform: ${platform}`)
-    const suffix = archs[arch]
-    if (!suffix) throw new Error(`Unsupported architecture: ${arch}`)
-    const source = require.resolve(`@denolint/libdenolint-${platform}-${suffix()}`)
-    const target = join(__dirname, '../libdenolint.node')
-    await rename(source, target)
-  } catch ({ message }) {
-    console.error(message)
-  }
-})()
+const pkgFile = join(__dirname, '../package.json')
+const { optionalDependencies } = JSON.parse(readFileSync(pkgFile, 'utf8'))
+if (optionalDependencies) {
+  const archs = platforms[platform]
+  if (!archs) throw new Error(`Unsupported platform: ${platform}`)
+  const suffix = archs[arch]
+  if (!suffix) throw new Error(`Unsupported architecture: ${arch}`)
+  const source = require.resolve(`@denolint/libdenolint-${platform}-${suffix()}`)
+  const target = join(__dirname, '../libdenolint.node')
+  renameSync(source, target)
+}
