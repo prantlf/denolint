@@ -1,6 +1,6 @@
 [package]
 name = "libdenolint"
-version = "1.0.3"
+version = "1.0.82"
 edition = "2021"
 
 [lib]
