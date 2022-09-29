@@ -54,7 +54,20 @@ async function moveExe(dir) {
   }
 }
 
+async function fixDeps() {
+  const pkgFile = join(__dirname, '../package.json')
+  const pkg = JSON.parse(await readFile(pkgFile, 'utf8'))
+  const { version } = pkg
+  pkg.optionalDependencies = Object
+    .keys(platforms)
+    .reduce((deps, dir) => {
+      deps[`@denolint/denolint-${dir}`] = version
+      return deps
+    }, {})
+  await writeFile(pkgFile, JSON.stringify(pkg, undefined, 2))
+}
+
 const readme = Object.keys(platforms).map(fixReadme)
 const added = Object.keys(platforms).map(fixBin)
 const copied = Object.keys(platforms).map(moveExe)
-await Promise.all([...readme, ...added, ...copied])
+await Promise.all([...readme, ...added, ...copied, fixDeps()])
