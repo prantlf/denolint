@@ -34,7 +34,7 @@
     "test:win32": "denolint -p ..\\..\\crates\\shared\\test\\pass && denolint -p ..\\..\\crates\\shared\\test\\warn || denolint -p ..\\..\\crates\\shared\\test\\fail || denolint -h && denolint -V",
     "copy:target": "node scripts/copy-target",
     "move:artifact": "node scripts/move-artifact",
-    "upgrade": "node scripts/set-version",
+    "version": "node scripts/set-version && npx conventional-changelog-cli -p angular -i CHANGELOG.md",
     "prepublishOnly": "napi create-npm-dir -t . && node scripts/prepare-npm"
   },
   "napi": {

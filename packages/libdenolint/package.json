@@ -42,7 +42,7 @@
     "test:win32": "node test/index.cjs && node test/index.mjs",
     "copy:target": "node scripts/copy-target",
     "move:artifact": "node scripts/move-artifact",
-    "upgrade": "node scripts/set-version",
+    "version": "node scripts/set-version && npx conventional-changelog-cli -p angular -i CHANGELOG.md -s",
     "prepublishOnly": "napi create-npm-dir -t . && node scripts/prepare-npm"
   },
   "napi": {
