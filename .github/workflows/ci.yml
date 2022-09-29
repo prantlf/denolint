@@ -272,11 +272,25 @@ jobs:
         with:
           path: artifacts
 
-      - name: PNPM publish
+      - name: Publish common
         run: |
           find ./packages/ -type d -maxdepth 1 -exec cp LICENSE {} \;
           echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
-          ./scripts/publish.sh
+          pnpm -r publish --no-git-checks
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: PNPM publish both native
+        if: "startsWith(github.event.head_commit.message, 'chore(release): publish both')"
+        run: ./scripts/publish-native.sh both
+        shell: bash
+
+      - name: PNPM publish native denolint
+        if: "startsWith(github.event.head_commit.message, 'chore(release): publish denolint')"
+        run: ./scripts/publish-native.sh denolint
+        shell: bash
+
+      - name: PNPM publish native libdenolint
+        if: "startsWith(github.event.head_commit.message, 'chore(release): publish libdenolint')"
+        run: ./scripts/publish-native.sh libdenolint
+        shell: bash
