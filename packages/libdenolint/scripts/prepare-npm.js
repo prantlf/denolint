@@ -19,6 +19,7 @@ const platforms = {
   // 'linux-arm64-musl': 'aarch64-unknown-linux-musl',
   'win32-arm64-msvc': 'aarch64-pc-windows-msvc',
 }
+const dirs = Object.keys(platforms)
 
 async function fixReadme(dir) {
   const readmeFile = join(__dirname, '../npm', dir, 'README.md')
@@ -48,14 +49,14 @@ async function fixDeps() {
   const pkgFile = join(__dirname, '../package.json')
   const pkg = JSON.parse(await readFile(pkgFile, 'utf8'))
   const { version } = pkg
-  pkg.optionalDependencies = Object.keys(platforms).reduce((deps, dir) => {
+  pkg.optionalDependencies = dirs.reduce((deps, dir) => {
     deps[`@denolint/libdenolint-${dir}`] = version
     return deps
   }, {})
   await writeFile(pkgFile, JSON.stringify(pkg, undefined, 2))
 }
 
-const readme = Object.keys(platforms).map(fixReadme)
-const added = Object.keys(platforms).map(fixFiles)
-const copied = Object.keys(platforms).map(moveLib)
-await Promise.all([...readme, ...added, ...copied, fixDeps()])
+const fixed = dirs.map(fixReadme)
+const added = dirs.map(fixFiles)
+const moved = dirs.map(moveLib)
+await Promise.all([...fixed, ...added, ...moved, fixDeps()])
