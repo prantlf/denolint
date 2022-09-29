@@ -1,3 +1,9 @@
+## [1.0.2](https://github.com/prantlf/denolint/compare/v1.0.1...v1.0.2) (2022-09-29)
+
+### Bug Fixes
+
+* **denolint:** Ensure symlink to the executable in .bin ([192ac24](https://github.com/prantlf/denolint/commit/192ac24d42377411946beda6eb6bff8938ba87f2))
+
 ## 1.0.1 (2022-09-29)
 
 ### Bug Fixes

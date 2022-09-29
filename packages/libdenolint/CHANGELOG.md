@@ -1,3 +1,9 @@
+## [1.0.2](https://github.com/prantlf/denolint/compare/v1.0.1...v1.0.2) (2022-09-29)
+
+### Bug Fixes
+
+* **libdenolint:** Fix automatic publishing of native packages ([e49a42e](https://github.com/prantlf/denolint/commit/e49a42ecf462dc1992b19955ded88f966c14391c))
+
 ## 1.0.1 (2022-09-29)
 
 ### Bug Fixes
