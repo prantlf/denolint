@@ -40,7 +40,7 @@ const platforms = {
     if (!suffix) throw new Error(`Unsupported architecture: ${arch}`)
     const exeSuffix = platform === 'win32' ? '.exe' : ''
     const exeName = `denolint${exeSuffix}`
-    const modDir = `${env.INIT_CWD}/node_modules`;
+    const modDir = `${env.INIT_CWD}/node_modules`
     const link = join(modDir, `.bin/${exeName}`)
     try {
       await access(link)
