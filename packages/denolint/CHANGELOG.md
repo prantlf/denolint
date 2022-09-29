@@ -1,3 +1,9 @@
+## [1.0.84](https://github.com/prantlf/denolint/compare/v1.0.83...v1.0.84) (2022-09-29)
+
+### Bug Fixes
+
+* **denolint:** Fix native package publishing ([df93d3f](https://github.com/prantlf/denolint/commit/df93d3fdb5f7660361dd835f5acbe3edd028d665))
+
 ## [1.0.83](https://github.com/prantlf/denolint/compare/v1.0.82...v1.0.83) (2022-09-29)
 
 ### Bug Fixes
