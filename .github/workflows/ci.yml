@@ -276,17 +276,7 @@ jobs:
         run: |
           find ./packages/ -type d -maxdepth 1 -exec cp LICENSE {} \;
           echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" >> ~/.npmrc
-          pnpm -r publish --no-git-checks
-          cd packages/denolint/npm/win32-x64-msvc && pnpm publish --no-git-checks && cd ../../../..
-          cd packages/denolint/npm/darwin-x64 && pnpm publish --no-git-checks && cd ../../../..
-          cd packages/denolint/npm/linux-x64-gnu && pnpm publish --no-git-checks && cd ../../../..
-          cd packages/denolint/npm/darwin-arm64 && pnpm publish --no-git-checks && cd ../../../..
-          cd packages/denolint/npm/win32-arm64-msvc && pnpm publish --no-git-checks && cd ../../../..
-          cd packages/libdenolint/npm/win32-x64-msvc && pnpm publish --no-git-checks && cd ../../../..
-          cd packages/libdenolint/npm/darwin-x64 && pnpm publish --no-git-checks && cd ../../../..
-          cd packages/libdenolint/npm/linux-x64-gnu && pnpm publish --no-git-checks && cd ../../../..
-          cd packages/libdenolint/npm/darwin-arm64 && pnpm publish --no-git-checks && cd ../../../..
-          cd packages/libdenolint/npm/win32-arm64-msvc && pnpm publish --no-git-checks && cd ../../../..
+          ./scripts/publish.sh
         env:
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
