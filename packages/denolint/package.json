@@ -26,9 +26,10 @@
   },
   "type": "module",
   "files": [
-    "README.md"
+    "lib"
   ],
   "scripts": {
+    "postinstall": "node lib/postinstall.cjs",
     "build": "cargo build --release && strip ../../target/release/denolint && node scripts/copy-target",
     "test:other": "./denolint -p ../../crates/shared/test/pass && ./denolint -p ../../crates/shared/test/warn || ./denolint -p ../../crates/shared/test/fail || ./denolint -h && ./denolint -V",
     "test:win32": "denolint -p ..\\..\\crates\\shared\\test\\pass && denolint -p ..\\..\\crates\\shared\\test\\warn || denolint -p ..\\..\\crates\\shared\\test\\fail || denolint -h && denolint -V",
