@@ -14,4 +14,4 @@ async function fixVer(file, source, target) {
   await writeFile(path, text)
 }
 
-await fixVer('Cargo.toml', /^version = "[.0-9]+"/g, `version = "${version}"`)
+await fixVer('Cargo.toml', /\nversion = "[.0-9]+"/g, `\nversion = "${version}"`)
