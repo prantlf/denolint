@@ -1,3 +1,9 @@
+## 1.0.1 (2022-09-29)
+
+### Bug Fixes
+
+* Install platform packages using optional dependencies ([bfaf001](https://github.com/prantlf/denolint/commit/bfaf00136b5462fc216c8cb56d9c95224ecd056f))
+
 # 1.0.0 (2022-09-28)
 
 This is the first version released after forking the [customisation] of the [original project].
