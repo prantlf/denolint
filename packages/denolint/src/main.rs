@@ -72,7 +72,7 @@ fn main() -> ExitCode {
         return ExitCode::from(0);
       }
       "-V" | "--version" => {
-        println!("1.0.84");
+        println!("1.1.0");
         return ExitCode::from(0);
       }
       &_ => dirs.push(arg.clone()),
