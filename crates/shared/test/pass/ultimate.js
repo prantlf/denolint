@@ -1,1 +1,5 @@
-process.exit(42)
+// Retuns the answer to everything
+export function answer() {
+  const answer = 42
+  return answer
+}
