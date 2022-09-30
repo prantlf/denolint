@@ -204,7 +204,7 @@ pub fn denolint(
         match lint_file(p, rules.clone()) {
           Ok(b) => ok = ok && b,
           Err(e) => {
-            eprintln!("{e}");
+            eprintln!("{e}\n");
             ok = false
           }
         }
@@ -216,7 +216,7 @@ pub fn denolint(
     match lint_file(Path::new(i), rules.clone()) {
       Ok(b) => ok = ok && b,
       Err(e) => {
-        eprintln!("{e}");
+        eprintln!("{e}\n");
         ok = false
       }
     }
