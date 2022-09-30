@@ -1,7 +1,7 @@
 {
   "name": "denolint",
   "description": "Deno lint command-line executable for Node.js",
-  "version": "1.0.84",
+  "version": "1.1.0",
   "homepage": "https://github.com/prantlf/denolint#readme",
   "author": "Ferdinand Prantl <prantlf@gmail.com>",
   "contributors": [

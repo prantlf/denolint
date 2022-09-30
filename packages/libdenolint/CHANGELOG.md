@@ -1,3 +1,14 @@
+# [1.1.0](https://github.com/prantlf/denolint/compare/v1.0.84...v1.1.0) (2022-09-30)
+
+### Bug Fixes
+
+* Separate fatal parser errors with an extra line break ([7ece377](https://github.com/prantlf/denolint/commit/7ece377891fa3039b9c074ba6b481f685e9752e0))
+
+### Features
+
+* Add platforms win32-ia32, linux-arm, linux-arm64, linux-musl and freebsd ([046a336](https://github.com/prantlf/denolint/commit/046a336fa403df8875a7015e797bfa98ea74bbb9))
+* Allow specifying ignore patterns on the command line ([217b756](https://github.com/prantlf/denolint/commit/217b7565e179c3958dbcadd619c015dd8eb239b3))
+
 ## [1.0.82](https://github.com/prantlf/denolint/compare/v1.0.3...v1.0.82) (2022-09-29)
 
 ### Bug Fixes
