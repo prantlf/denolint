@@ -1,3 +1,7 @@
+# [1.1.1](https://github.com/prantlf/denolint/compare/v1.1.0...v1.1.1) (2022-10-01)
+
+Publish missing native packages.
+
 # [1.1.0](https://github.com/prantlf/denolint/compare/v1.0.84...v1.1.0) (2022-09-30)
 
 ### Bug Fixes
