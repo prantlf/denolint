@@ -219,9 +219,9 @@ Methods `denolint` and `denolintSync` return `boolean` (or a `Promise` to a `boo
 | Linux x64 musl   | ✓      | ✓      | ✓      |
 | Linux arm gnu    | ✓      | ✓      | ✓      |
 | Linux arm64 gnu  | ✓      | ✓      | ✓      |
-| Linux arm64 musl | ✓      | ✓      | ✓      |
-| Android arm64    | ✓      | ✓      | ✓      |
-| Android armv7    | ✓      | ✓      | ✓      |
+| Linux arm64 musl | ×      | ×      | ×      |
+| Android arm64    | ×      | ×      | ×      |
+| Android armv7    | ×      | ×      | ×      |
 | FreeBSD x64      | ✓      | ✓      | ✓      |
 
 ## Contributing

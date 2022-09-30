@@ -137,9 +137,9 @@ The argument `--check-only` known from [@node-rs/deno-lint] is not supported. If
 | Linux x64 musl   | ✓      | ✓      | ✓      |
 | Linux arm gnu    | ✓      | ✓      | ✓      |
 | Linux arm64 gnu  | ✓      | ✓      | ✓      |
-| Linux arm64 musl | ✓      | ✓      | ✓      |
-| Android arm64    | ✓      | ✓      | ✓      |
-| Android armv7    | ✓      | ✓      | ✓      |
+| Linux arm64 musl | ×      | ×      | ×      |
+| Android arm64    | ×      | ×      | ×      |
+| Android armv7    | ×      | ×      | ×      |
 | FreeBSD x64      | ✓      | ✓      | ✓      |
 
 ## Contributing

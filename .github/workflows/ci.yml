@@ -21,7 +21,6 @@ on:
   pull_request:
 
 jobs:
-
   build:
     if: "!contains(github.event.head_commit.message, 'skip ci')"
 
@@ -43,12 +42,47 @@ jobs:
               cargo build --release
               pnpm -r run copy:target
 
+          - host: windows-latest
+            target: i686-pc-windows-msvc
+            build: |
+              cargo build --release --target i686-pc-windows-msvc
+              pnpm -r run copy:target i686-pc-windows-msvc
+
           - host: ubuntu-latest
             target: x86_64-unknown-linux-gnu
             build: |
               cargo build --release
               strip target/release/*.so target/release/denolint
               pnpm -r run copy:target
+
+          - host: ubuntu-latest
+            target: armv7-unknown-linux-gnueabihf
+            setup: |
+              sudo apt-get update
+              sudo apt-get install -y gcc-arm-linux-gnueabihf
+            build: |
+              cargo build --release --target armv7-unknown-linux-gnueabihf
+              arm-linux-gnueabihf-strip target/armv7-unknown-linux-gnueabihf/release/*.so target/armv7-unknown-linux-gnueabihf/release/denolint
+              pnpm -r run copy:target armv7-unknown-linux-gnueabihf
+
+          - host: ubuntu-latest
+            target: x86_64-unknown-linux-musl
+            docker: ghcr.io/napi-rs/napi-rs/nodejs-rust:lts-alpine
+            build: |
+              cargo build --release
+              strip target/release/*.so target/release/denolint
+              pnpm -r run copy:target
+
+          - host: ubuntu-latest
+            target: aarch64-unknown-linux-gnu
+            docker: ghcr.io/napi-rs/napi-rs/nodejs-rust:lts-debian-aarch64
+            setup: |
+              sudo apt-get update
+              sudo apt-get install -y gcc-aarch64-linux-gnu
+            build: |
+              cargo build --release --target aarch64-unknown-linux-gnu
+              aarch64-linux-gnu-strip target/aarch64-unknown-linux-gnu/release/*.so target/aarch64-unknown-linux-gnu/release/denolint
+              pnpm -r run copy:target aarch64-unknown-linux-gnu
 
           - host: macos-latest
             target: aarch64-apple-darwin
@@ -62,6 +96,28 @@ jobs:
               strip -x target/aarch64-apple-darwin/release/*.dylib
               strip target/aarch64-apple-darwin/release/denolint
               pnpm -r run copy:target aarch64-apple-darwin
+
+          # - host: ubuntu-latest
+          #   target: aarch64-unknown-linux-musl
+          #   docker: ghcr.io/napi-rs/napi-rs/nodejs-rust:lts-alpine
+          #   build: |
+          #     rustup target add aarch64-unknown-linux-musl
+          #     cargo build --release --target aarch64-unknown-linux-musl
+          #     /aarch64-linux-musl-cross/bin/aarch64-linux-musl-strip target/release/*.so target/release/denolint
+          #     pnpm -r run copy:target
+          # - host: ubuntu-latest
+          #   target: aarch64-unknown-linux-musl
+          #   docker: ghcr.io/napi-rs/napi-rs/nodejs-rust:lts-debian-aarch64
+          #   build: |
+          #     sudo apt-get update
+          #     sudo apt-get install -y --no-install-recommends gcc-aarch64-linux-gnu
+          #     sudo dpkg --add-architecture arm64
+          #     sudo apt update
+          #     sudo apt install -y --no-install-recommends musl:arm64
+          #     rustup target add aarch64-unknown-linux-musl
+          #     cargo build --release --target aarch64-unknown-linux-musl
+          #     aarch64-linux-musl-strip target/aarch64-unknown-linux-musl/release/*.so target/aarch64-unknown-linux-musl/release/denolint
+          #     pnpm -r run copy:target aarch64-unknown-linux-musl
 
           - host: windows-latest
             target: aarch64-pc-windows-msvc
@@ -150,8 +206,74 @@ jobs:
             packages/denolint/denolint*
           if-no-files-found: error
 
-  test:
+  build-freebsd:
+    if: "!contains(github.event.head_commit.message, 'skip ci')"
 
+    name: build-x86_64-unknown-freebsd
+    runs-on: macos-12
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build
+        id: build
+        uses: vmactions/freebsd-vm@v0.2.3
+        env:
+          DEBUG: 'napi:*'
+          RUSTUP_HOME: /usr/local/rustup
+          CARGO_HOME: /usr/local/cargo
+          RUSTUP_IO_THREADS: 1
+        with:
+          envs: 'DEBUG RUSTUP_HOME CARGO_HOME RUSTUP_IO_THREADS'
+          usesh: true
+          mem: 3000
+          prepare: |
+            pkg install -y curl node16
+            curl -qL https://www.npmjs.com/install.sh | sh
+            curl https://sh.rustup.rs -sSf --output rustup.sh
+            sh rustup.sh -y --profile minimal --default-toolchain stable
+          run: |
+            echo "Install NPM dependencies"
+            npm i
+            cd packages/libdenolint
+            npm un libdenolint
+            npm i
+            cd ../..
+            echo "Build Rust artifacts"
+            . /usr/local/cargo/env
+            cargo build --release
+            strip -x target/release/*.so
+            strip target/release/denolint
+            echo "Distribute Rust artifacts"
+            cd packages/denolint
+            node scripts/copy-target.js
+            cd ../..
+            cd packages/libdenolint
+            node scripts/copy-target.js
+            cd ../..
+            echo "Test"
+            cd packages/denolint
+            ./denolint -p ../../crates/shared/test/pass && ./denolint -p ../../crates/shared/test/warn || ./denolint -p ../../crates/shared/test/fail || ./denolint -h && ./denolint -V
+            cd ../..
+            cd packages/libdenolint
+            node test/index.cjs
+            node test/index.mjs
+            cd ../..
+            echo "Clean up"
+            rm -rf node_modules
+            cd packages/libdenolint
+            rm -rf node_modules
+            cd ../..
+            rm -rf target
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: x86_64-unknown-freebsd
+          path: |
+            packages/*/*.node
+            packages/denolint/denolint*
+          if-no-files-found: error
+
+  test:
     needs:
       - build
 
@@ -163,10 +285,17 @@ jobs:
             target: x86_64-apple-darwin
           - host: windows-latest
             target: x86_64-pc-windows-msvc
+          # - host: windows-latest
+          #   target: i686-pc-windows-msvc
           - host: ubuntu-latest
             target: x86_64-unknown-linux-gnu
+          - host: ubuntu-latest
+            target: x86_64-unknown-linux-musl
+            docker: ghcr.io/napi-rs/napi-rs/nodejs-rust:lts-alpine
           # - host: macos-latest
           #   target: aarch64-apple-darwin
+          # - host: ubuntu-latest
+          #   target: aarch64-unknown-linux-musl
           # - host: windows-latest
           #   target: aarch64-pc-windows-msvc
         node:
@@ -199,6 +328,11 @@ jobs:
         with:
           path: node_modules
           key: ${{ matrix.settings.target }}-npm-${{ matrix.node }}-${{ hashFiles('pnpm-lock.yaml') }}
+
+      - name: Setup node x86
+        if: matrix.settings.target == 'i686-pc-windows-msvc'
+        run: pnpm config set supportedArchitectures.cpu "ia32"
+        shell: bash
 
       - name: Install NPM dependencies
         run: pnpm i --frozen-lockfile --no-verify-store-integrity
@@ -237,6 +371,7 @@ jobs:
 
     needs:
       - test
+      - build-freebsd
 
     name: publish
     runs-on: ubuntu-latest

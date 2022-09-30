@@ -65,9 +65,9 @@ See more information about the packages and their compatibility with [@node-rs/d
 | Linux x64 musl   | ✓      | ✓      | ✓      |
 | Linux arm gnu    | ✓      | ✓      | ✓      |
 | Linux arm64 gnu  | ✓      | ✓      | ✓      |
-| Linux arm64 musl | ✓      | ✓      | ✓      |
-| Android arm64    | ✓      | ✓      | ✓      |
-| Android armv7    | ✓      | ✓      | ✓      |
+| Linux arm64 musl | ×      | ×      | ×      |
+| Android arm64    | ×      | ×      | ×      |
+| Android armv7    | ×      | ×      | ×      |
 | FreeBSD x64      | ✓      | ✓      | ✓      |
 
 ## Contributing
