@@ -4,7 +4,7 @@
 
 This project started as fork of a [customised @node-rs/deno-lint], adding the flexibility of `eslint`:
 
-* Scan specific directories ([631], [647])
+* Scan specific directories with specific ignore patterns ([631], [647])
 * Scan directories configured by `files.include` ([635], [645])
 * Fix handling of the configuration `files.exclude` ([635], [646])
 * Support disabling rules in souces using `eslint-disable` ([630], [642])
@@ -17,7 +17,18 @@ This project started as fork of a [customised @node-rs/deno-lint], adding the fl
 
 Scan sources in two directories on the command line:
 
-    npx denolint src test
+    $ npx denolint src test
+
+    no-var
+
+    × `var` keyword is not allowed.
+    ╭─[src/index.js:3:3]
+    3 │ export function answer() {
+    4 │   var answer = 42
+    ·   ───────────────
+    5 │   return answer
+    ╰────
+    help: https://lint.deno.land/#no-var
 
 Check one source file programmatically:
 
@@ -36,10 +47,10 @@ for (const warning of warnings) console.warn(warning)
 
 See more information about the packages and their compatibility with [@node-rs/deno-lint]:
 
-| Project       | Package                                                             | Description                                   |
-| ------------- | ------------------------------------------------------------------- | --------------------------------------------- |
-| [denolint]    | [![denolint](https://img.shields.io/npm/v/denolint.svg)][cmd]       | Deno lint command-line executable for Node.js |
-| [libdenolint] | [![libdenolint](https://img.shields.io/npm/v/libdenolint.svg)][lib] | Deno lint library binding for Node.js         |
+| Project       | Package                                                         | Description                                   |
+| ------------- | --------------------------------------------------------------- | --------------------------------------------- |
+| [denolint]    | [![denolint](https://img.shields.io/npm/v/denolint)][cmd]       | Deno lint command-line executable for Node.js |
+| [libdenolint] | [![libdenolint](https://img.shields.io/npm/v/libdenolint)][lib] | Deno lint library binding for Node.js         |
 
 ## Support matrix
 
@@ -59,6 +70,17 @@ See more information about the packages and their compatibility with [@node-rs/d
 | Android armv7    | ✓      | ✓      | ✓      |
 | FreeBSD x64      | ✓      | ✓      | ✓      |
 
+## Contributing
+
+In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code.
+
+## License
+
+Copyright (c) 2020-2022 LongYinan<br>
+Copyright (c) 2022 Ferdinand Prantl
+
+Licensed under the [MIT] license.
+
 [deno_lint]: https://github.com/denoland/deno_lint
 [customised @node-rs/deno-lint]: https://github.com/prantlf/node-rs/commits/combined
 [@node-rs/deno-lint]: https://github.com/napi-rs/node-rs/tree/main/packages/deno-lint#readme
@@ -76,3 +98,4 @@ See more information about the packages and their compatibility with [@node-rs/d
 [647]: https://github.com/napi-rs/node-rs/pull/647
 [648]: https://github.com/napi-rs/node-rs/issues/648
 [650]: https://github.com/napi-rs/node-rs/issues/650
+[MIT]: https://github.com/prantlf/denolint/blob/master/LICENSE

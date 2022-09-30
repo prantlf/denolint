@@ -1,12 +1,15 @@
 # libdenolint
 
-![libdenolint](https://img.shields.io/npm/v/libdenolint.svg)
+[![Latest version](https://img.shields.io/npm/v/libdenolint)
+ ![Dependency status](https://img.shields.io/librariesio/release/npm/libdenolint)
+](https://www.npmjs.com/package/libdenolint)
+
 
 > [Deno lint] library binding for Node.js
 
 This project started as fork of [customised @node-rs/deno-lint], adding the flexibility of `eslint`:
 
-* Scan specific directories ([631], [647])
+* Scan specific directories with specific ignore patterns ([631], [647])
 * Scan directories configured by `files.include` ([635], [645])
 * Fix handling of the configuration `files.exclude` ([635], [646])
 * Support disabling rules in souces using `eslint-disable` ([630], [642])
@@ -46,13 +49,18 @@ try {
 ```ts
 import { denolint, denolintSync } from 'libdenolint'
 
+interface DenoLintOptions {
+  scanDirs?: string[],
+  ignorePatterns?: string[]
+}
+
 function denolint(
-  projDir?: string, configPath?: string, scanDirs?: string[],
-  signal?: AbortSignal
+  projectDir?: string, configPath?: string,
+  options?: DenoLintOptions, signal?: AbortSignal
 ): Promise<boolean>
 
 function denolintSync(
-  projDir?: string, configPath?: string, scanDirs?: string[]
+  projectDir?: string, configPath?: string, options?: DenoLintOptions
 ): boolean
 ```
 
@@ -80,6 +88,10 @@ Example:
 
 ```json
 {
+  "files": {
+    "include": ["src", "test"],
+    "exclude": ["examples"]
+  },
   "rules": {
     "tags": ["recommended"],
     "exclude": [
@@ -106,6 +118,13 @@ Check out [deno_lint rules] for all rules.
 - Default: `[]`
 
 Directories to scan for sources. The project directory will be scanned if none specified.
+
+### `ignorePatterns`
+
+- Type: `String[]`
+- Default: `[]`
+
+File patterns to ignore when the source directories are scanned. I applies only to directories specified on the command line; not to the directories specified by `files.include` from the config file.
 
 ### `signal`
 
@@ -205,6 +224,17 @@ Methods `denolint` and `denolintSync` return `boolean` (or a `Promise` to a `boo
 | Android armv7    | ✓      | ✓      | ✓      |
 | FreeBSD x64      | ✓      | ✓      | ✓      |
 
+## Contributing
+
+In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code.
+
+## License
+
+Copyright (c) 2020-2022 LongYinan<br>
+Copyright (c) 2022 Ferdinand Prantl
+
+Licensed under the [MIT] license.
+
 [deno lint]: https://github.com/denoland/deno_lint#readme
 [customised @node-rs/deno-lint]: https://github.com/prantlf/node-rs/commits/combined
 [@node-rs/deno-lint]: https://github.com/napi-rs/node-rs/tree/main/packages/deno-lint#readme
@@ -218,3 +248,4 @@ Methods `denolint` and `denolintSync` return `boolean` (or a `Promise` to a `boo
 [646]: https://github.com/napi-rs/node-rs/pull/646
 [647]: https://github.com/napi-rs/node-rs/pull/647
 [650]: https://github.com/napi-rs/node-rs/issues/650
+[MIT]: https://github.com/prantlf/denolint/blob/master/LICENSE

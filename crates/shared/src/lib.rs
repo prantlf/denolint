@@ -66,6 +66,7 @@ pub fn denolint(
   proj_dir: Option<String>,
   config_path: Option<String>,
   scan_dirs: Option<Vec<String>>,
+  ignore_patterns: Option<Vec<String>>,
 ) -> Result<bool, Error> {
   let mut ok = true;
 
@@ -130,15 +131,19 @@ pub fn denolint(
   let mut dirs: Vec<String>;
   let files: Vec<String>;
   let mut patterns: Vec<String>;
+  let ignore: Vec<String>;
   let scan = scan_dirs.unwrap_or_default();
   if !scan.is_empty() {
     (dirs, files, patterns) = media::classify_paths(&scan, &proj);
+    ignore = ignore_patterns.unwrap_or_default();
   } else if !cfg_add_files.is_empty() {
     (dirs, files, patterns) = media::classify_paths(&cfg_add_files, &proj);
+    ignore = cfg_ignore_files;
   } else {
     dirs = vec![];
     files = vec![];
     patterns = vec![];
+    ignore = ignore_patterns.unwrap_or_default();
   };
   #[allow(clippy::needless_range_loop)]
   for i in 0..patterns.len() {
@@ -164,9 +169,9 @@ pub fn denolint(
     if !ignore_file_path.is_empty() {
       dir_walker.add_custom_ignore_filename(ignore_file_path);
     }
-    if scan.is_empty() && !cfg_ignore_files.is_empty() {
+    if !ignore.is_empty() {
       let mut overrides = OverrideBuilder::new(&root);
-      for i in &cfg_ignore_files {
+      for i in &ignore {
         let mut p = "!".to_string();
         p.push_str(i);
         overrides
@@ -177,6 +182,9 @@ pub fn denolint(
         .build()
         .unwrap_or_else(|e| panic!("Applying files.exclude from {:?} failed: {}", config, e));
       dir_walker.overrides(o);
+    }
+    for i in dirs.into_iter().skip(1) {
+      dir_walker.add(i);
     }
     if !patterns.is_empty() {
       let mut overrides = OverrideBuilder::new(&root);
@@ -189,9 +197,6 @@ pub fn denolint(
         .build()
         .unwrap_or_else(|e| panic!("Applying files.include from {:?} failed: {}", config, e));
       dir_walker.overrides(o);
-    }
-    for i in dirs.into_iter().skip(1) {
-      dir_walker.add(i);
     }
     for entry in dir_walker.build().filter_map(|v| v.ok()) {
       let p = entry.path();
@@ -206,6 +211,7 @@ pub fn denolint(
       }
     }
   }
+
   for i in &files {
     match lint_file(Path::new(i), rules.clone()) {
       Ok(b) => ok = ok && b,

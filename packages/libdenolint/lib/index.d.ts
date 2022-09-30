@@ -1,12 +1,17 @@
 /* eslint-disable no-unused-vars, prettier/prettier */
 
+interface DenoLintOptions {
+  scanDirs?: string[],
+  ignorePatterns?: string[],
+}
+
 export function denolint(
-  projDir?: string, configPath?: string, scanDirs?: string[],
-  signal?: AbortSignal
+  projectDir?: string, configPath?: string,
+  options?: DenoLintOptions, signal?: AbortSignal
 ): Promise<boolean>
 
 export function denolintSync(
-  projDir?: string, configPath?: string, scanDirs?: string[]
+  projectDir?: string, configPath?: string, options?: DenoLintOptions
 ): boolean
 
 export function lint(
