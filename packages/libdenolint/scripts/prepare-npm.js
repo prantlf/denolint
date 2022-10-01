@@ -49,6 +49,7 @@ async function fixDeps() {
   const pkgFile = join(__dirname, '../package.json')
   const pkg = JSON.parse(await readFile(pkgFile, 'utf8'))
   const { version } = pkg
+  delete pkg.devDependencies.libdenolint
   pkg.optionalDependencies = dirs.reduce((deps, dir) => {
     deps[`@denolint/libdenolint-${dir}`] = version
     return deps
