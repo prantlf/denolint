@@ -6,6 +6,7 @@ use std::mem;
 use std::path;
 use std::path::Path;
 use std::path::PathBuf;
+use std::sync::Arc;
 
 use deno_lint::linter::LinterBuilder;
 use deno_lint::rules::get_recommended_rules;
@@ -13,13 +14,12 @@ use deno_lint::rules::LintRule;
 use ignore::overrides::OverrideBuilder;
 use ignore::types::TypesBuilder;
 use ignore::WalkBuilder;
-use std::sync::Arc;
 
 pub mod config;
 pub mod diagnostics;
 pub mod media;
 
-fn lint_file(p: &Path, rules: Vec<Arc<dyn LintRule>>) -> Result<bool, Error> {
+fn lint_file(p: &Path, base: &Path, rules: Vec<Arc<dyn LintRule>>) -> Result<bool, Error> {
   let file_content = fs::read_to_string(&p).map_err(|e| {
     Error::new(
       ErrorKind::Other,
@@ -33,28 +33,30 @@ fn lint_file(p: &Path, rules: Vec<Arc<dyn LintRule>>) -> Result<bool, Error> {
     .ignore_file_directive("eslint-disable")
     .ignore_diagnostic_directive("eslint-disable-next-line")
     .build();
+  let name = media::make_relative(p, base);
   let (s, file_diagnostics) = linter
     .lint(
-      p.to_str()
+      name
+        .to_str()
         .ok_or_else(|| {
           Error::new(
             ErrorKind::Other,
-            format!("Convert path to string failed: {:?}", &p),
+            format!("Convert path to string failed: {:?}", &name),
           )
         })?
         .to_owned(),
       file_content,
     )
     .map_err(|e| {
-      let suffix = if e.to_string().contains(p.to_str().unwrap()) {
+      let suffix = if e.to_string().contains(name.to_str().unwrap()) {
         "".to_string()
       } else {
-        format!(", at: {:?}", &p)
+        format!(", at: {:?}", &name)
       };
       Error::new(ErrorKind::Other, format!("Lint failed: {}{}", e, &suffix))
     })?;
   for issue in
-    diagnostics::display_diagnostics(&file_diagnostics, s.text_info(), p.to_str().unwrap())
+    diagnostics::display_diagnostics(&file_diagnostics, s.text_info(), name.to_str().unwrap())
       .map_err(|err| Error::new(ErrorKind::Other, format!("{err}")))?
   {
     eprintln!("{issue}")
@@ -69,12 +71,19 @@ pub fn denolint(
   ignore_patterns: Option<Vec<String>>,
 ) -> Result<bool, Error> {
   let mut ok = true;
+  let has_proj: bool;
 
   let cwd = env::current_dir()
     .map_err(|e| Error::new(ErrorKind::Other, format!("Get current_dir failed {}", e)))?;
   let proj = match proj_dir {
-    Some(s) => media::make_absolute(&s, &cwd),
-    None => cwd,
+    Some(s) => {
+      has_proj = true;
+      media::make_absolute(&s, &cwd)
+    }
+    None => {
+      has_proj = false;
+      cwd.clone()
+    }
   };
 
   let config = config_path.unwrap_or_else(|| ".denolint.json".to_string());
@@ -131,19 +140,28 @@ pub fn denolint(
   let mut dirs: Vec<String>;
   let files: Vec<String>;
   let mut patterns: Vec<String>;
-  let ignore: Vec<String>;
+  let mut ignore: Vec<String>;
   let scan = scan_dirs.unwrap_or_default();
   if !scan.is_empty() {
-    (dirs, files, patterns) = media::classify_paths(&scan, &proj);
-    ignore = ignore_patterns.unwrap_or_default();
+    (dirs, files, patterns) = media::classify_paths(&scan, cwd.as_path());
   } else if !cfg_add_files.is_empty() {
     (dirs, files, patterns) = media::classify_paths(&cfg_add_files, &proj);
-    ignore = cfg_ignore_files;
   } else {
     dirs = vec![];
     files = vec![];
     patterns = vec![];
-    ignore = ignore_patterns.unwrap_or_default();
+  }
+  ignore = ignore_patterns.unwrap_or_default();
+  if !ignore.is_empty() {
+    ignore = ignore
+      .iter()
+      .map(|p| media::make_absolute_string(p, &cwd))
+      .collect();
+  } else if !cfg_ignore_files.is_empty() {
+    ignore = cfg_ignore_files
+      .iter()
+      .map(|p| media::make_absolute_string(p, &proj))
+      .collect();
   };
   #[allow(clippy::needless_range_loop)]
   for i in 0..patterns.len() {
@@ -159,8 +177,8 @@ pub fn denolint(
   }
 
   if !dirs.is_empty() || scan.is_empty() && cfg_add_files.is_empty() {
-    let root = if dirs.is_empty() {
-      proj
+    let root = if has_proj || dirs.is_empty() || scan.is_empty() {
+      proj.clone()
     } else {
       PathBuf::from(&dirs[0])
     };
@@ -173,7 +191,7 @@ pub fn denolint(
       let mut overrides = OverrideBuilder::new(&root);
       for i in &ignore {
         let mut p = "!".to_string();
-        p.push_str(i);
+        p.push_str(media::make_relative_string(i, root.as_path()).as_str());
         overrides
           .add(&p)
           .unwrap_or_else(|e| panic!("Adding exclude pattern {:?} failed: {}", i, e));
@@ -184,13 +202,13 @@ pub fn denolint(
       dir_walker.overrides(o);
     }
     for i in dirs.into_iter().skip(1) {
-      dir_walker.add(i);
+      dir_walker.add(media::make_relative_string(&i, &root));
     }
     if !patterns.is_empty() {
       let mut overrides = OverrideBuilder::new(&root);
       for i in &patterns {
         overrides
-          .add(i)
+          .add(media::make_relative_string(i, &root).as_str())
           .unwrap_or_else(|e| panic!("Adding include pattern {:?} failed: {}", i, e));
       }
       let o = overrides
@@ -201,7 +219,7 @@ pub fn denolint(
     for entry in dir_walker.build().filter_map(|v| v.ok()) {
       let p = entry.path();
       if p.is_file() {
-        match lint_file(p, rules.clone()) {
+        match lint_file(p, &proj, rules.clone()) {
           Ok(b) => ok = ok && b,
           Err(e) => {
             eprintln!("{e}\n");
@@ -213,7 +231,7 @@ pub fn denolint(
   }
 
   for i in &files {
-    match lint_file(Path::new(i), rules.clone()) {
+    match lint_file(Path::new(i), &proj, rules.clone()) {
       Ok(b) => ok = ok && b,
       Err(e) => {
         eprintln!("{e}\n");
