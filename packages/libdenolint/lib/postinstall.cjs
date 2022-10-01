@@ -1,4 +1,4 @@
-const { readFileSync, renameSync } = require('fs')
+const { existsSync, readFileSync, renameSync } = require('fs')
 const { join } = require('path')
 
 const { platform, arch } = process
@@ -39,7 +39,9 @@ if (optionalDependencies) {
   if (!archs) throw new Error(`Unsupported platform: ${platform}`)
   const suffix = archs[arch]
   if (!suffix) throw new Error(`Unsupported architecture: ${arch}`)
-  const source = require.resolve(`@denolint/libdenolint-${platform}-${suffix()}`)
   const target = join(__dirname, '../libdenolint.node')
-  renameSync(source, target)
+  if (!existsSync(target)) {
+    const source = require.resolve(`@denolint/libdenolint-${platform}-${suffix()}`)
+    renameSync(source, target)
+  }
 }
