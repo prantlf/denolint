@@ -1,3 +1,9 @@
+## [1.1.5](https://github.com/prantlf/denolint/compare/v1.0.84...v1.1.5) (2022-10-01)
+
+### Bug Fixes
+
+* **libdenolint:** Fix upgrade of an already installed package ([9533373](https://github.com/prantlf/denolint/commit/95333731dd9f3c0e3dcd6e73a1456fce19706e04))
+
 ## [1.1.3](https://github.com/prantlf/denolint/compare/v1.0.84...v1.1.3) (2022-10-01)
 
 ### Bug Fixes
