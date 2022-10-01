@@ -1,4 +1,4 @@
-const { chmodSync, mkdirSync, readFileSync, symlinkSync } = require('fs')
+const { chmodSync, existsSync, mkdirSync, readFileSync, symlinkSync } = require('fs')
 const { basename, join } = require('path')
 
 const { platform, arch, env } = process
@@ -44,5 +44,5 @@ if (optionalDependencies) {
   const binDir = join(`${env.INIT_CWD}/node_modules`, '.bin')
   mkdirSync(binDir, { recursive: true })
   const link = join(binDir, basename(target))
-  symlinkSync(target, link, 'junction')
+  if (!existsSync(link)) symlinkSync(target, link, 'junction')
 }
