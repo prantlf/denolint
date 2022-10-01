@@ -1,5 +1,5 @@
 const { chmodSync, mkdirSync, readFileSync, symlinkSync } = require('fs')
-const { join } = require('path')
+const { basename, join } = require('path')
 
 const { platform, arch, env } = process
 
@@ -39,14 +39,10 @@ if (optionalDependencies) {
   if (!archs) throw new Error(`Unsupported platform: ${platform}`)
   const suffix = archs[arch]
   if (!suffix) throw new Error(`Unsupported architecture: ${arch}`)
-  const isWindows = platform === 'win32'
-  const exeSuffix = isWindows ? '.exe' : ''
-  const exeName = `denolint${exeSuffix}`
-  const modDir = `${env.INIT_CWD}/node_modules`
-  const target = join(modDir, `@denolint/denolint-${platform}-${suffix()}/${exeName}`)
-  if (!isWindows) chmodSync(target, 0o755)
-  const binDir = join(modDir, '.bin')
+  const target = require.resolve(`@denolint/denolint-${platform}-${suffix()}`)
+  if (platform !== 'win32') chmodSync(target, 0o755)
+  const binDir = join(`${env.INIT_CWD}/node_modules`, '.bin')
   mkdirSync(binDir, { recursive: true })
-  const link = join(binDir, exeName)
+  const link = join(binDir, basename(target))
   symlinkSync(target, link, 'junction')
 }

@@ -38,8 +38,8 @@ async function fixReadme(dir) {
 async function fixFiles(dir) {
   const pkgFile = join(__dirname, '../npm', dir, 'package.json')
   const pkg = JSON.parse(await readFile(pkgFile, 'utf8'))
-  delete pkg.main
   const exeName = `denolint${getExeSuffix(dir)}`
+  pkg.main = exeName
   pkg.files = [exeName]
   await writeFile(pkgFile, JSON.stringify(pkg, undefined, 2))
 }
