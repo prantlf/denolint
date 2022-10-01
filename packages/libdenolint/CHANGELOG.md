@@ -1,3 +1,10 @@
+## [1.1.3](https://github.com/prantlf/denolint/compare/v1.0.84...v1.1.3) (2022-10-01)
+
+### Bug Fixes
+
+* **libdenolint:** Remove the sel-package link from dev dependencies ([f2cc0fe](https://github.com/prantlf/denolint/commit/f2cc0fe01f9392c95b30477cb3e6f3c8f5caeb10))
+* Separate fatal parser errors with an extra line break ([7ece377](https://github.com/prantlf/denolint/commit/7ece377891fa3039b9c074ba6b481f685e9752e0))
+
 # [1.1.1](https://github.com/prantlf/denolint/compare/v1.1.0...v1.1.1) (2022-10-01)
 
 Publish missing native packages.

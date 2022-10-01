@@ -1,3 +1,10 @@
+## [1.1.3](https://github.com/prantlf/denolint/compare/v1.0.84...v1.1.3) (2022-10-01)
+
+### Bug Fixes
+
+* **denolint:** Fix relative paths in including and excluding directories ([26a5c38](https://github.com/prantlf/denolint/commit/26a5c38aa230ec6cc0cb27dd26bcb7f73ea21aa4))
+* **denolint:** Support PNPM ([bf50084](https://github.com/prantlf/denolint/commit/bf50084395ee4c0609ba7bedb15fc500cc2d2e7c))
+
 ## [1.1.2](https://github.com/prantlf/denolint/compare/v1.0.84...v1.1.2) (2022-10-01)
 
 ### Bug Fixes
