@@ -6,6 +6,8 @@
 
 > [Deno lint] command-line executable for Node.js
 
+A lot faster than [eslint], handling both JavaScript and TypeScript sources.
+
 This project started as fork of [customised @node-rs/deno-lint], adding the flexibility of `eslint`:
 
 * Scan specific directories with specific ignore patterns ([631], [647])
@@ -157,6 +159,7 @@ Licensed under the [MIT] license.
 [customised @node-rs/deno-lint]: https://github.com/prantlf/node-rs/commits/combined
 [@node-rs/deno-lint]: https://github.com/napi-rs/node-rs/tree/main/packages/deno-lint#readme
 [deno_lint rules]: https://github.com/denoland/deno_lint/tree/main/docs/rules
+[eslint]: https://eslint.org/
 [630]: https://github.com/napi-rs/node-rs/issues/630
 [631]: https://github.com/napi-rs/node-rs/issues/631
 [635]: https://github.com/napi-rs/node-rs/issues/635

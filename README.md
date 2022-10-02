@@ -2,6 +2,8 @@
 
 > Monorepo for calling `deno lint` in Node.js projects using the Rust package [deno_lint].
 
+A lot faster than [eslint], handling both JavaScript and TypeScript sources. Use [rollup-plugin-denolint] for [Rollup]. Use [esbuild-plugin-denolint] for [esbuild]. Use [webpack-loader-denolint] for [Webpack]. Or simpler, just the command-line [denolint].
+
 This project started as fork of a [customised @node-rs/deno-lint], adding the flexibility of `eslint`:
 
 * Scan specific directories with specific ignore patterns ([631], [647])
@@ -88,6 +90,13 @@ Licensed under the [MIT] license.
 [cmd]: https://www.npmjs.com/package/denolint
 [libdenolint]: https://github.com/prantlf/denolint/tree/master/packages/libdenolint#readme
 [lib]: https://www.npmjs.com/package/libdenolint
+[eslint]: https://eslint.org/
+[esbuild-plugin-denolint]: https://github.com/prantlf/esbuild-plugin-denolint#readme
+[esbuild]: https://esbuild.github.io/
+[rollup-plugin-denolint]: https://github.com/prantlf/rollup-plugin-denolint#readme
+[Rollup]: https://rollupjs.org/
+[webpack-loader-denolint]: https://github.com/prantlf/webpack-loader-denolint#readme
+[Webpack]: https://webpack.js.org/
 [630]: https://github.com/napi-rs/node-rs/issues/630
 [631]: https://github.com/napi-rs/node-rs/issues/631
 [635]: https://github.com/napi-rs/node-rs/issues/635

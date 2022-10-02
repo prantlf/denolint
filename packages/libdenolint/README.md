@@ -4,8 +4,9 @@
  ![Dependency status](https://img.shields.io/librariesio/release/npm/libdenolint)
 ](https://www.npmjs.com/package/libdenolint)
 
-
 > [Deno lint] library binding for Node.js
+
+Used in bundler plugins: [rollup-plugin-denolint] for [Rollup], [esbuild-plugin-denolint] for [esbuild], [webpack-loader-denolint] for [Webpack].
 
 This project started as fork of [customised @node-rs/deno-lint], adding the flexibility of `eslint`:
 
@@ -239,6 +240,12 @@ Licensed under the [MIT] license.
 [customised @node-rs/deno-lint]: https://github.com/prantlf/node-rs/commits/combined
 [@node-rs/deno-lint]: https://github.com/napi-rs/node-rs/tree/main/packages/deno-lint#readme
 [deno_lint rules]: https://github.com/denoland/deno_lint/tree/main/docs/rules
+[esbuild-plugin-denolint]: https://github.com/prantlf/esbuild-plugin-denolint#readme
+[esbuild]: https://esbuild.github.io/
+[rollup-plugin-denolint]: https://github.com/prantlf/rollup-plugin-denolint#readme
+[Rollup]: https://rollupjs.org/
+[webpack-loader-denolint]: https://github.com/prantlf/webpack-loader-denolint#readme
+[Webpack]: https://webpack.js.org/
 [630]: https://github.com/napi-rs/node-rs/issues/630
 [631]: https://github.com/napi-rs/node-rs/issues/631
 [635]: https://github.com/napi-rs/node-rs/issues/635
