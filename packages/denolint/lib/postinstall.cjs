@@ -1,4 +1,4 @@
-const { chmodSync, existsSync, mkdirSync, readFileSync, symlinkSync } = require('fs')
+const { chmodSync, existsSync, lstatSync, mkdirSync, readFileSync, symlinkSync, unlinkSync } = require('fs')
 const { basename, join } = require('path')
 
 const { platform, arch, env } = process
@@ -51,11 +51,19 @@ if (optionalDependencies) {
   log && console.log(`[denolint] Creating "${binDir}".`)
   mkdirSync(binDir, { recursive: true })
   const link = join(binDir, basename(target))
-  if (!existsSync(link)) {
+  const stat = lstatSync(link, { throwIfNoEntry: false })
+  if (!stat) {
     log && console.log(`[denolint] Linking "${target}" to "${link}".`)
     symlinkSync(target, link, 'junction')
   } else {
-    log && console.log(`[denolint] "${link}" already exists.`)
+    if (!existsSync(link)) {
+      log && console.log(`[denolint] Removing invalid "${link}".`)
+      unlinkSync(link)
+      log && console.log(`[denolint] Linking "${target}" to "${link}".`)
+      symlinkSync(target, link, 'junction')
+    } else {
+      log && console.log(`[denolint] "${link}" already exists.`)
+    }
   }
 } else {
   log && console.log('[denolint] Development installation detected.')
