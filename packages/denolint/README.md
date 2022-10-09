@@ -99,6 +99,10 @@ Disables searching for the default config file if no specific config file is pro
 
 Only lists the files names, which would be processed, without checking their syntax. It can be used to learn what files will be processed.
 
+### `--show-rule`, `-r`
+
+Explains a rule, or lists all rules, emphasizing the recommended ones, if no rule name is specified.
+
 ### `--help`, `-h`
 
 Prints the usage instructions and exits.

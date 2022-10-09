@@ -4,6 +4,8 @@ extern crate shared;
 use std::env;
 use std::process::ExitCode;
 
+mod rules;
+
 fn help() {
   println!(
     "Checks syntax of JavaScript and TypeScript source files.
@@ -17,6 +19,7 @@ Options:
   -c|--config <file>             config file (default: .denolint.json)
   --no-config                    disable searching for the default config
   --dry-run                      print matching files instead of checking
+  -r|--show-rule [rule]          explains a rule, or lists all rules
   -V|--version                   print version number and exit
   -h|--help                      print usage instructions and exit
 
@@ -37,6 +40,7 @@ fn main() -> ExitCode {
   let mut ignore_patterns = vec![];
   let mut format: Option<String> = None;
   let mut dry_run: Option<bool> = None;
+  let mut show_rule: Option<String> = None;
 
   let args: Vec<String> = env::args().collect();
   let mut i = 1;
@@ -85,6 +89,14 @@ fn main() -> ExitCode {
       "--no-dry-run" => {
         dry_run = Some(false);
       }
+      "-r" | "--show-rule" => {
+        if i + 1 < l {
+          i += 1;
+          show_rule = Some(args[i].clone());
+        } else {
+          show_rule = Some("".to_owned());
+        }
+      }
       "-h" | "--help" => {
         help();
         return ExitCode::from(0);
@@ -98,18 +110,28 @@ fn main() -> ExitCode {
     i += 1;
   }
 
-  match shared::denolint(
-    proj_dir,
-    config_path,
-    Some(dirs),
-    Some(ignore_patterns),
-    format,
-    dry_run,
-  ) {
-    Ok(ok) => ExitCode::from(if ok { 0 } else { 1 }),
-    Err(e) => {
-      eprintln!("{e}");
-      ExitCode::from(1)
+  if let Some(rule_name) = show_rule {
+    let rules = if rule_name.is_empty() {
+      rules::get_all_rules_metadata()
+    } else {
+      rules::get_specific_rule_metadata(&rule_name)
+    };
+    rules::print_rules::<rules::PrettyFormatter>(rules);
+    ExitCode::from(0)
+  } else {
+    match shared::denolint(
+      proj_dir,
+      config_path,
+      Some(dirs),
+      Some(ignore_patterns),
+      format,
+      dry_run,
+    ) {
+      Ok(ok) => ExitCode::from(if ok { 0 } else { 1 }),
+      Err(e) => {
+        eprintln!("{e}");
+        ExitCode::from(1)
+      }
     }
   }
 }
