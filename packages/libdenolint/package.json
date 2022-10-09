@@ -66,10 +66,6 @@
       "name": "@denolint/libdenolint"
     }
   },
-  "publishConfig": {
-    "registry": "https://registry.npmjs.org/",
-    "access": "public"
-  },
   "devDependencies": {
     "libdenolint": "link:",
     "tehanu": "^1.0.1",
