@@ -54,13 +54,13 @@ if (optionalDependencies) {
   const stat = lstatSync(link, { throwIfNoEntry: false })
   if (!stat) {
     log && console.log(`[denolint] Linking "${target}" to "${link}".`)
-    symlinkSync(target, link, 'junction')
+    symlinkSync(target, link, 'file')
   } else {
     if (!existsSync(link)) {
       log && console.log(`[denolint] Removing invalid "${link}".`)
       unlinkSync(link)
       log && console.log(`[denolint] Linking "${target}" to "${link}".`)
-      symlinkSync(target, link, 'junction')
+      symlinkSync(target, link, 'file')
     } else {
       log && console.log(`[denolint] "${link}" already exists.`)
     }
