@@ -1,3 +1,39 @@
+# [2.0.0](https://github.com/prantlf/denolint/compare/v1.1.6...v2.0.0) (2022-10-09)
+
+### Features
+
+* Add dry-run option to print found file names without checking ([5030b2a](https://github.com/prantlf/denolint/commit/5030b2a75a21a5f8efad96fa0f7831ef4dff8f29))
+* **libdenolint:** Add an option to print warnings in compact format ([c812d3e](https://github.com/prantlf/denolint/commit/c812d3e5ac3035d2d2fc5321a1435db36e1bcbea))
+
+### BREAKING CHANGES
+
+* **libdenolint:** All public methods require the optional parameters
+to be specified as an object. The alternative listing the options
+as separate function arguments has been removed. (Making the `signal`
+argument alternating is not possible using the current NAPI.)
+
+How to update the source code:
+
+```diff
+  denolint(projectDir, configPath,
+-   scanDirs, ignorePatterns, signal)
++   { scanDirs, ignorePatterns }, signal)
+
+  denolintSync(projectDir, configPath,
+-   scanDirs, ignorePatterns)
++   { scanDirs, ignorePatterns })
+
+  lint(fileName, sourceCode,
+-   allRules, excludeRules, includeRules, signal)
++   { allRules, excludeRules, includeRules }, signal)
+
+  lintSync(fileName, sourceCode,
+-   allRules, excludeRules, includeRules)
++   { allRules, excludeRules, includeRules })
+```
+
+The interface of the command-line tool was not affected by this change.
+
 ## [1.1.6](https://github.com/prantlf/denolint/compare/v1.1.5...v1.1.6) (2022-10-09)
 
 ### Bug Fixes

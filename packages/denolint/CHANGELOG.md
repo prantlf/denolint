@@ -1,3 +1,12 @@
+# [2.0.0](https://github.com/prantlf/denolint/compare/v1.1.6...v2.0.0) (2022-10-09)
+
+### Features
+
+* Add dry-run option to print found file names without checking ([5030b2a](https://github.com/prantlf/denolint/commit/5030b2a75a21a5f8efad96fa0f7831ef4dff8f29))
+* **denolint:** Explain a rule or list all rules on the console ([2420221](https://github.com/prantlf/denolint/commit/242022122c554c90699fdfa3efec73d585653614))
+
+The interface of the command-line tool was not affected by a breaking change in `libdenolint`.
+
 ## [1.1.6](https://github.com/prantlf/denolint/compare/v1.1.4...v1.1.6) (2022-10-09)
 
 ### Bug Fixes
