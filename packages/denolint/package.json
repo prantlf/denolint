@@ -1,7 +1,7 @@
 {
   "name": "denolint",
   "description": "Deno lint command-line executable for Node.js",
-  "version": "1.1.6",
+  "version": "1.1.7",
   "homepage": "https://github.com/prantlf/denolint#readme",
   "author": "Ferdinand Prantl <prantlf@gmail.com>",
   "contributors": [
@@ -35,7 +35,7 @@
     "test:win32": "denolint -p ..\\..\\crates\\shared\\test\\pass && denolint -p ..\\..\\crates\\shared\\test\\warn || denolint -p ..\\..\\crates\\shared\\test\\fail || denolint -h && denolint -V",
     "copy:target": "node scripts/copy-target",
     "move:artifact": "node scripts/move-artifact",
-    "version": "node scripts/set-version && npx conventional-changelog-cli -p angular -i CHANGELOG.md",
+    "version": "node scripts/set-version && npx conventional-changelog-cli -p angular -i CHANGELOG.md -s",
     "prepublishOnly": "napi create-npm-dir -t . && node scripts/prepare-npm"
   },
   "napi": {
