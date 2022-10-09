@@ -16,6 +16,8 @@ This project started as fork of [customised @node-rs/deno-lint], adding the flex
 * Support disabling rules in souces using `eslint-disable` ([630], [642])
 * Execute the command-line tool `denolint` without loading the Node.js VM ([648])
 * Allow specifying dirdctories, files and patterns as input for checking
+* Print warning messages in pretty or compact formats
+* Explain a rule or list all supported rules on the console
 
 ## Synopsis
 

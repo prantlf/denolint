@@ -17,6 +17,7 @@ This project started as fork of [customised @node-rs/deno-lint], adding the flex
 * Support including and excluding rules in the `lint` method ([631], [643])
 * Offer both synchronous and asynchronous methods ([650])
 * Allow specifying directories, files and patterns as input for checking
+* Print warning messages in pretty or compact formats
 
 ## Synopsis
 

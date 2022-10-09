@@ -14,6 +14,8 @@ This project started as fork of a [customised @node-rs/deno-lint], adding the fl
 * Execute the command-line tool `denolint` without loading the Node.js VM ([648])
 * Offer both synchronous and asynchronous methods ([650])
 * Allow specifying directories, files and patterns as input for checking
+* Print warning messages in pretty or compact formats
+* Explain a rule or list all supported rules on the console
 
 ## Synopsis
 
