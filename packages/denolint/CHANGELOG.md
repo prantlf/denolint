@@ -1,3 +1,9 @@
+## [2.0.1](https://github.com/prantlf/denolint/compare/v2.0.0...v2.0.1) (2022-10-09)
+
+### Bug Fixes
+
+* Fix replacing symlink during npm upgrade ([5a5cb4f](https://github.com/prantlf/denolint/commit/5a5cb4f0303794cdad6b20cc2e3fbc5ec23ba611))
+
 # [2.0.0](https://github.com/prantlf/denolint/compare/v1.1.6...v2.0.0) (2022-10-09)
 
 ### Features
