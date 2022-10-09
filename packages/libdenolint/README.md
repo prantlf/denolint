@@ -207,6 +207,10 @@ Methods `denolint` and `lint` are synchronous. If you want to retain the synchro
 
 Methods `denolint` and `denolintSync` return `boolean` (or a `Promise` to a `boolean`) with the result of the syntax check. The value `true` means success, the value `false` means a failure. Pay attention, the `boolean` retuurned by the method `denolint` from [@node-rs/deno-lint] has the meaning the other way round!
 
+## Troubleshooting
+
+If the installation fails, set the environment variable `LIBDENOLINT_DEBUG` to `true` and watch the debugging output on the console.
+
 ## Support matrix
 
 | Platform         | node14 | node16 | node18 |

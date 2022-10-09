@@ -1,7 +1,8 @@
 const { existsSync, readFileSync, renameSync } = require('fs')
 const { join } = require('path')
 
-const { platform, arch } = process
+const { platform, arch, env } = process
+const log = !!env.LIBDENOLINT_DEBUG
 
 const isMusl = () => {
   const { glibcVersionRuntime } = process.report.getReport().header
@@ -35,13 +36,20 @@ const platforms = {
 const pkgFile = join(__dirname, '../package.json')
 const { optionalDependencies } = JSON.parse(readFileSync(pkgFile, 'utf8'))
 if (optionalDependencies) {
+  log && console.log('[libdenolint] Release installation detected.')
   const archs = platforms[platform]
   if (!archs) throw new Error(`Unsupported platform: ${platform}`)
   const suffix = archs[arch]
   if (!suffix) throw new Error(`Unsupported architecture: ${arch}`)
+  log && console.log(`[libdenolint] Platform ${platform}, architecture ${arch}, suffix ${suffix()}.`)
   const target = join(__dirname, '../libdenolint.node')
   if (!existsSync(target)) {
     const source = require.resolve(`@denolint/libdenolint-${platform}-${suffix()}`)
+    log && console.log(`[libdenolint] Moving "${source}" to "${target}".`)
     renameSync(source, target)
+  } else {
+    log && console.log(`[libdenolint] "${target}" already exists.`)
   }
+} else {
+  log && console.log('[libdenolint] Development installation detected.')
 }

@@ -126,6 +126,10 @@ The argument `--check-only` known from [@node-rs/deno-lint] is not supported. If
 + npx denolint || true
 ```
 
+## Troubleshooting
+
+If the installation fails, set the environment variable `DENOLINT_DEBUG` to `true` and watch the debugging output on the console.
+
 ## Support matrix
 
 | Platform         | node14 | node16 | node18 |

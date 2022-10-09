@@ -2,6 +2,7 @@ const { chmodSync, existsSync, mkdirSync, readFileSync, symlinkSync } = require(
 const { basename, join } = require('path')
 
 const { platform, arch, env } = process
+const log = !!env.DENOLINT_DEBUG
 
 const isMusl = () => {
   const { glibcVersionRuntime } = process.report.getReport().header
@@ -35,14 +36,27 @@ const platforms = {
 const pkgFile = join(__dirname, '../package.json')
 const { optionalDependencies } = JSON.parse(readFileSync(pkgFile, 'utf8'))
 if (optionalDependencies) {
+  log && console.log('[denolint] Release installation detected.')
   const archs = platforms[platform]
   if (!archs) throw new Error(`Unsupported platform: ${platform}`)
   const suffix = archs[arch]
   if (!suffix) throw new Error(`Unsupported architecture: ${arch}`)
+  log && console.log(`[denolint] Platform ${platform}, architecture ${arch}, suffix ${suffix()}.`)
   const target = require.resolve(`@denolint/denolint-${platform}-${suffix()}`)
-  if (platform !== 'win32') chmodSync(target, 0o755)
+  if (platform !== 'win32') {
+    log && console.log(`[denolint] Making "${target}" executable.`)
+    chmodSync(target, 0o755)
+  }
   const binDir = join(`${env.INIT_CWD}/node_modules`, '.bin')
+  log && console.log(`[denolint] Creating "${binDir}".`)
   mkdirSync(binDir, { recursive: true })
   const link = join(binDir, basename(target))
-  if (!existsSync(link)) symlinkSync(target, link, 'junction')
+  if (!existsSync(link)) {
+    log && console.log(`[denolint] Linking "${target}" to "${link}".`)
+    symlinkSync(target, link, 'junction')
+  } else {
+    log && console.log(`[denolint] "${link}" already exists.`)
+  }
+} else {
+  log && console.log('[denolint] Development installation detected.')
 }
