@@ -19,7 +19,12 @@ pub mod config;
 pub mod diagnostics;
 pub mod media;
 
-fn lint_file(p: &Path, base: &Path, rules: Vec<Arc<dyn LintRule>>) -> Result<bool, Error> {
+fn lint_file(
+  p: &Path,
+  base: &Path,
+  rules: Vec<Arc<dyn LintRule>>,
+  format: Option<String>,
+) -> Result<bool, Error> {
   let file_content = fs::read_to_string(&p).map_err(|e| {
     Error::new(
       ErrorKind::Other,
@@ -49,15 +54,19 @@ fn lint_file(p: &Path, base: &Path, rules: Vec<Arc<dyn LintRule>>) -> Result<boo
     )
     .map_err(|e| {
       let suffix = if e.to_string().contains(name.to_str().unwrap()) {
-        "".to_string()
+        "".to_owned()
       } else {
         format!(", at: {:?}", &name)
       };
       Error::new(ErrorKind::Other, format!("Lint failed: {}{}", e, &suffix))
     })?;
-  for issue in
-    diagnostics::display_diagnostics(&file_diagnostics, s.text_info(), name.to_str().unwrap())
-      .map_err(|err| Error::new(ErrorKind::Other, format!("{err}")))?
+  for issue in diagnostics::display_diagnostics(
+    &file_diagnostics,
+    s.text_info(),
+    name.to_str().unwrap(),
+    format.as_deref(),
+  )
+  .map_err(|err| Error::new(ErrorKind::Other, format!("{err}")))?
   {
     eprintln!("{issue}")
   }
@@ -69,6 +78,7 @@ pub fn denolint(
   config_path: Option<String>,
   scan_dirs: Option<Vec<String>>,
   ignore_patterns: Option<Vec<String>>,
+  format: Option<String>,
 ) -> Result<bool, Error> {
   let mut ok = true;
   let has_proj: bool;
@@ -86,7 +96,7 @@ pub fn denolint(
     }
   };
 
-  let config = config_path.unwrap_or_else(|| ".denolint.json".to_string());
+  let config = config_path.unwrap_or_else(|| ".denolint.json".to_owned());
   let config_existed =
     !config.is_empty() && fs::metadata(&config).map(|m| m.is_file()).unwrap_or(false);
 
@@ -190,7 +200,7 @@ pub fn denolint(
     if !ignore.is_empty() {
       let mut overrides = OverrideBuilder::new(&root);
       for i in &ignore {
-        let mut p = "!".to_string();
+        let mut p = "!".to_owned();
         p.push_str(media::make_relative_string(i, root.as_path()).as_str());
         overrides
           .add(&p)
@@ -219,7 +229,7 @@ pub fn denolint(
     for entry in dir_walker.build().filter_map(|v| v.ok()) {
       let p = entry.path();
       if p.is_file() {
-        match lint_file(p, &proj, rules.clone()) {
+        match lint_file(p, &proj, rules.clone(), format.clone()) {
           Ok(b) => ok = ok && b,
           Err(e) => {
             eprintln!("{e}\n");
@@ -231,7 +241,7 @@ pub fn denolint(
   }
 
   for i in &files {
-    match lint_file(Path::new(i), &proj, rules.clone()) {
+    match lint_file(Path::new(i), &proj, rules.clone(), format.clone()) {
       Ok(b) => ok = ok && b,
       Err(e) => {
         eprintln!("{e}\n");

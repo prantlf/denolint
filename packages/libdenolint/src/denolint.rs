@@ -8,13 +8,13 @@ use napi_derive::*;
 pub struct DenoLintOptions {
   pub scan_dirs: Option<Vec<String>>,
   pub ignore_patterns: Option<Vec<String>>,
+  pub format: Option<String>,
 }
 
 struct AsyncDenoLint {
   proj_dir: Option<String>,
   config_path: Option<String>,
-  scan_dirs: Option<Vec<String>>,
-  ignore_patterns: Option<Vec<String>>,
+  options: Option<DenoLintOptions>,
 }
 
 impl Task for AsyncDenoLint {
@@ -25,10 +25,11 @@ impl Task for AsyncDenoLint {
     denolint_sync(
       self.proj_dir.clone(),
       self.config_path.clone(),
-      Some(Either::B(DenoLintOptions {
-        scan_dirs: self.scan_dirs.clone(),
-        ignore_patterns: self.ignore_patterns.clone(),
-      })),
+      self.options.as_ref().map(|o| DenoLintOptions {
+        scan_dirs: o.scan_dirs.clone(),
+        ignore_patterns: o.ignore_patterns.clone(),
+        format: o.format.clone(),
+      }),
     )
   }
 
@@ -41,33 +42,14 @@ impl Task for AsyncDenoLint {
 fn denolint(
   proj_dir: Option<String>,
   config_path: Option<String>,
-  scan_or_options: Option<Either<Vec<String>, DenoLintOptions>>,
+  options: Option<DenoLintOptions>,
   signal: Option<AbortSignal>,
 ) -> AsyncTask<AsyncDenoLint> {
-  let scan_dirs: Option<Vec<String>>;
-  let ignore_patterns: Option<Vec<String>>;
-  match scan_or_options {
-    Some(e) => match e {
-      Either::A(v) => {
-        scan_dirs = Some(v);
-        ignore_patterns = None;
-      }
-      Either::B(o) => {
-        scan_dirs = o.scan_dirs;
-        ignore_patterns = o.ignore_patterns;
-      }
-    },
-    None => {
-      scan_dirs = None;
-      ignore_patterns = None;
-    }
-  };
   AsyncTask::with_optional_signal(
     AsyncDenoLint {
       proj_dir,
       config_path,
-      scan_dirs,
-      ignore_patterns,
+      options,
     },
     signal,
   )
@@ -77,27 +59,24 @@ fn denolint(
 fn denolint_sync(
   proj_dir: Option<String>,
   config_path: Option<String>,
-  scan_or_options: Option<Either<Vec<String>, DenoLintOptions>>,
+  options: Option<DenoLintOptions>,
 ) -> Result<bool> {
   let scan_dirs: Option<Vec<String>>;
   let ignore_patterns: Option<Vec<String>>;
-  match scan_or_options {
-    Some(e) => match e {
-      Either::A(v) => {
-        scan_dirs = Some(v);
-        ignore_patterns = None;
-      }
-      Either::B(o) => {
-        scan_dirs = o.scan_dirs;
-        ignore_patterns = o.ignore_patterns;
-      }
-    },
+  let format: Option<String>;
+  match options {
+    Some(o) => {
+      scan_dirs = o.scan_dirs;
+      ignore_patterns = o.ignore_patterns;
+      format = o.format;
+    }
     None => {
       scan_dirs = None;
       ignore_patterns = None;
+      format = None;
     }
   };
-  match shared::denolint(proj_dir, config_path, scan_dirs, ignore_patterns) {
+  match shared::denolint(proj_dir, config_path, scan_dirs, ignore_patterns, format) {
     Ok(s) => Ok(s),
     Err(e) => Err(Error::new(Status::GenericFailure, format!("{e}"))),
   }

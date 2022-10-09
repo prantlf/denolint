@@ -10,7 +10,7 @@ crate-type = ["cdylib"]
 deno_lint = "0.33.0"
 global_alloc = { path = "../../crates/alloc" }
 # Default enable napi4 feature, see https://nodejs.org/api/n-api.html#node-api-version-matrix
-napi = { version = "2.9.1", default-features = false, features = ["napi4"] }
+napi = { version = "2.10.0", default-features = false, features = ["napi4"] }
 napi-derive = "2.9.1"
 shared = { path = "../../crates/shared" }
 

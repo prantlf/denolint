@@ -13,12 +13,18 @@ use shared::config;
 use shared::diagnostics;
 use shared::media;
 
+#[napi(object)]
+pub struct LintOptions {
+  pub all_rules: Option<bool>,
+  pub exclude_rules: Option<Vec<String>>,
+  pub include_rules: Option<Vec<String>>,
+  pub format: Option<String>,
+}
+
 struct AsyncLint {
   file_name: String,
   source_code: Either<String, Buffer>,
-  all_rules: Option<bool>,
-  exclude_rules: Option<Vec<String>>,
-  include_rules: Option<Vec<String>>,
+  options: Option<LintOptions>,
 }
 
 impl Task for AsyncLint {
@@ -33,9 +39,12 @@ impl Task for AsyncLint {
     lint_sync(
       self.file_name.clone(),
       source,
-      self.all_rules,
-      self.exclude_rules.clone(),
-      self.include_rules.clone(),
+      self.options.as_ref().map(|o| LintOptions {
+        all_rules: o.all_rules,
+        exclude_rules: o.exclude_rules.clone(),
+        include_rules: o.include_rules.clone(),
+        format: o.format.clone(),
+      }),
     )
   }
 
@@ -48,18 +57,14 @@ impl Task for AsyncLint {
 fn lint(
   file_name: String,
   source_code: Either<String, Buffer>,
-  all_rules: Option<bool>,
-  exclude_rules: Option<Vec<String>>,
-  include_rules: Option<Vec<String>>,
+  options: Option<LintOptions>,
   signal: Option<AbortSignal>,
 ) -> AsyncTask<AsyncLint> {
   AsyncTask::with_optional_signal(
     AsyncLint {
       file_name,
       source_code,
-      all_rules,
-      exclude_rules,
-      include_rules,
+      options,
     },
     signal,
   )
@@ -69,10 +74,26 @@ fn lint(
 fn lint_sync(
   file_name: String,
   source_code: Either<String, Buffer>,
-  all_rules: Option<bool>,
-  exclude_rules: Option<Vec<String>>,
-  include_rules: Option<Vec<String>>,
+  options: Option<LintOptions>,
 ) -> Result<Vec<String>> {
+  let all_rules: Option<bool>;
+  let exclude_rules: Option<Vec<String>>;
+  let include_rules: Option<Vec<String>>;
+  let format: Option<String>;
+  match options {
+    Some(o) => {
+      all_rules = o.all_rules;
+      exclude_rules = o.exclude_rules;
+      include_rules = o.include_rules;
+      format = o.format;
+    }
+    None => {
+      all_rules = None;
+      exclude_rules = None;
+      include_rules = None;
+      format = None;
+    }
+  };
   let linter = LinterBuilder::default()
     .rules(config::filter_rules(
       all_rules.unwrap_or(false),
@@ -98,7 +119,7 @@ fn lint_sync(
     .lint(file_name.clone(), source_string.to_owned())
     .map_err(|e| {
       let suffix = if e.to_string().contains(&file_name) {
-        "".to_string()
+        "".to_owned()
       } else {
         format!(", at: {:?}", &file_name)
       };
@@ -108,6 +129,11 @@ fn lint_sync(
       )
     })?;
 
-  diagnostics::display_diagnostics(&file_diagnostics, s.text_info(), &file_name)
-    .map_err(|err| Error::new(Status::GenericFailure, format!("{err}")))
+  diagnostics::display_diagnostics(
+    &file_diagnostics,
+    s.text_info(),
+    &file_name,
+    format.as_deref(),
+  )
+  .map_err(|err| Error::new(Status::GenericFailure, format!("{err}")))
 }

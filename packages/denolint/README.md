@@ -49,9 +49,9 @@ Scan sources in the test subdirectory using an alternative config file:
 
 The project directory will be scanned if no directory is specified either on the command line or in the config file. Directories on the command line take precedence over the directories in the config file.
 
-### `--ignore-pattern`, `-i`
+### `--format`, `-f`
 
-File pattern to ignore when the source directories are scanned. Can be specified multiple times to supply multiple ignore epatterns. I applies only to directories specified on the command line; not to the directories specified by `files.include` from the config file.
+Format of warnings printed on stderr. Either `compact` or `pretty` (default).
 
 ### `--project`, `-p`
 

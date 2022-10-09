@@ -3,6 +3,7 @@
 interface DenoLintOptions {
   scanDirs?: string[],
   ignorePatterns?: string[],
+  format?: 'compact' | 'pretty',
 }
 
 export function denolint(
@@ -14,13 +15,18 @@ export function denolintSync(
   projectDir?: string, configPath?: string, options?: DenoLintOptions
 ): boolean
 
+interface LintOptions {
+  allRules?: boolean,
+  excludeRules?: string[],
+  includeRules?: string[],
+  format?: 'compact' | 'pretty',
+}
+
 export function lint(
-  fileName: string, sourceCode: string | Buffer,
-  allRules?: boolean, excludeRules?: string[], includeRules?: string[],
+  fileName: string, sourceCode: string | Buffer, options?: LintOptions,
   signal?: AbortSignal
 ): Promise<Array<string>>
 
 export function lintSync(
-  fileName: string, sourceCode: string | Buffer,
-  allRules?: boolean, excludeRules?: string[], includeRules?: string[]
+  fileName: string, sourceCode: string | Buffer, options?: LintOptions
 ): Array<string>

@@ -11,6 +11,7 @@ fn help() {
 Usage: denolint [options] [directory...]
 
 Options:
+  -f|--format compact|pretty     how to print warnings (default: pretty)
   -i|--ignore-pattern <pattern>  file patterns to ignore during scanning
   -p|--project <directory>       project root directory (default: cwd)
   -c|--config <file>             config file (default: .denolint.json)
@@ -33,6 +34,7 @@ fn main() -> ExitCode {
   let mut config_path: Option<String> = None;
   let mut dirs = vec![];
   let mut ignore_patterns = vec![];
+  let mut format: Option<String> = None;
 
   let args: Vec<String> = env::args().collect();
   let mut i = 1;
@@ -40,6 +42,14 @@ fn main() -> ExitCode {
   while i < l {
     let arg = &args[i];
     match arg.as_str() {
+      "-f" | "--format" => {
+        i += 1;
+        if i == l {
+          eprintln!("missing format type");
+          return ExitCode::from(1);
+        }
+        format = Some(args[i].clone());
+      }
       "-i" | "--ignore-pattern" => {
         i += 1;
         if i == l {
@@ -65,7 +75,7 @@ fn main() -> ExitCode {
         config_path = Some(args[i].clone());
       }
       "--no-config" => {
-        config_path = Some("".to_string());
+        config_path = Some("".to_owned());
       }
       "-h" | "--help" => {
         help();
@@ -80,7 +90,13 @@ fn main() -> ExitCode {
     i += 1;
   }
 
-  match shared::denolint(proj_dir, config_path, Some(dirs), Some(ignore_patterns)) {
+  match shared::denolint(
+    proj_dir,
+    config_path,
+    Some(dirs),
+    Some(ignore_patterns),
+    format,
+  ) {
     Ok(ok) => ExitCode::from(if ok { 0 } else { 1 }),
     Err(e) => {
       eprintln!("{e}");

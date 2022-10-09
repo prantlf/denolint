@@ -38,8 +38,9 @@
   "scripts": {
     "postinstall": "node lib/postinstall.cjs",
     "build": "cargo build --release && strip -x ../../target/release/liblibdenolint.dylib && node scripts/copy-target",
-    "test:other": "teru test/*.cjs && teru-esm test/*.mjs",
-    "test:win32": "node test/index.cjs && node test/index.mjs",
+    "test:ts": "tsc --noEmit test/types.ts",
+    "test:other": "tsc --noEmit test/types.ts && teru test/*.cjs && teru-esm test/*.mjs",
+    "test:win32": "tsc --noEmit test/types.ts && node test/index.cjs && node test/index.mjs",
     "copy:target": "node scripts/copy-target",
     "move:artifact": "node scripts/move-artifact",
     "version": "node scripts/set-version && npx conventional-changelog-cli -p angular -i CHANGELOG.md -s",
@@ -67,10 +68,12 @@
     }
   },
   "devDependencies": {
+    "@types/node": "^18.8.3",
     "libdenolint": "link:",
     "tehanu": "^1.0.1",
     "tehanu-repo-coco": "^1.0.0",
-    "tehanu-teru": "^1.0.0"
+    "tehanu-teru": "^1.0.0",
+    "typescript": "^4.8.4"
   },
   "keywords": [
     "deno-lint",
