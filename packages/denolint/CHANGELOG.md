@@ -1,3 +1,9 @@
+## [2.0.2](https://github.com/prantlf/denolint/compare/v2.0.1...v2.0.2) (2022-10-09)
+
+### Bug Fixes
+
+* Use the compact format known from unix tools ([335cd8a](https://github.com/prantlf/denolint/commit/335cd8a42270c326af17c406edcdec51cf60f26a))
+
 ## [2.0.1](https://github.com/prantlf/denolint/compare/v2.0.0...v2.0.1) (2022-10-09)
 
 ### Bug Fixes
