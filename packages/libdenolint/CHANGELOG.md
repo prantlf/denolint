@@ -1,10 +1,17 @@
-## [1.1.5](https://github.com/prantlf/denolint/compare/v1.0.84...v1.1.5) (2022-10-01)
+## [1.1.6](https://github.com/prantlf/denolint/compare/v1.1.5...v1.1.6) (2022-10-09)
+
+### Bug Fixes
+
+* Add installation debug logging ([f7f8410](https://github.com/prantlf/denolint/commit/f7f8410ddc545ebb4c3445491322df9e9b5e8ea1))
+* Remove publishing settings from package.json ([fb13c61](https://github.com/prantlf/denolint/commit/fb13c615d9cd499c67527d4b3bd644d58b30f724))
+
+## [1.1.5](https://github.com/prantlf/denolint/compare/v1.1.3...v1.1.5) (2022-10-01)
 
 ### Bug Fixes
 
 * **libdenolint:** Fix upgrade of an already installed package ([9533373](https://github.com/prantlf/denolint/commit/95333731dd9f3c0e3dcd6e73a1456fce19706e04))
 
-## [1.1.3](https://github.com/prantlf/denolint/compare/v1.0.84...v1.1.3) (2022-10-01)
+## [1.1.3](https://github.com/prantlf/denolint/compare/v1.1.1...v1.1.3) (2022-10-01)
 
 ### Bug Fixes
 

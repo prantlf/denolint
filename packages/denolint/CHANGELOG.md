@@ -1,17 +1,24 @@
-## [1.1.4](https://github.com/prantlf/denolint/compare/v1.0.84...v1.1.4) (2022-10-01)
+## [1.1.6](https://github.com/prantlf/denolint/compare/v1.1.4...v1.1.6) (2022-10-09)
+
+### Bug Fixes
+
+* Add installation debug logging ([f7f8410](https://github.com/prantlf/denolint/commit/f7f8410ddc545ebb4c3445491322df9e9b5e8ea1))
+* Remove publishing settings from package.json ([fb13c61](https://github.com/prantlf/denolint/commit/fb13c615d9cd499c67527d4b3bd644d58b30f724))
+
+## [1.1.4](https://github.com/prantlf/denolint/compare/v1.1.3...v1.1.4) (2022-10-01)
 
 ### Bug Fixes
 
 * **denolint:** Fix upgrade of an already installed package ([389f90d](https://github.com/prantlf/denolint/commit/389f90dad3ef9303563001b936e84bdbdc566214))
 
-## [1.1.3](https://github.com/prantlf/denolint/compare/v1.0.84...v1.1.3) (2022-10-01)
+## [1.1.3](https://github.com/prantlf/denolint/compare/v1.1.2...v1.1.3) (2022-10-01)
 
 ### Bug Fixes
 
 * **denolint:** Fix relative paths in including and excluding directories ([26a5c38](https://github.com/prantlf/denolint/commit/26a5c38aa230ec6cc0cb27dd26bcb7f73ea21aa4))
 * **denolint:** Support PNPM ([bf50084](https://github.com/prantlf/denolint/commit/bf50084395ee4c0609ba7bedb15fc500cc2d2e7c))
 
-## [1.1.2](https://github.com/prantlf/denolint/compare/v1.0.84...v1.1.2) (2022-10-01)
+## [1.1.2](https://github.com/prantlf/denolint/compare/v1.1.1...v1.1.2) (2022-10-01)
 
 ### Bug Fixes
 
