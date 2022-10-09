@@ -118,14 +118,9 @@ fn lint_sync(
   let (s, file_diagnostics) = linter
     .lint(file_name.clone(), source_string.to_owned())
     .map_err(|e| {
-      let suffix = if e.to_string().contains(&file_name) {
-        "".to_owned()
-      } else {
-        format!(", at: {:?}", &file_name)
-      };
       Error::new(
         Status::GenericFailure,
-        format!("Lint failed: {}{}", e, &suffix),
+        media::pretty_error(&e.to_string(), &file_name),
       )
     })?;
 

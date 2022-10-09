@@ -5,6 +5,22 @@ use std::path::PathBuf;
 use deno_ast::MediaType;
 use pathdiff;
 
+pub fn compact_error(msg: &String, path: &String) -> String {
+  if let Some(loc) = msg.find(format!(" at {}", path).as_str()) {
+    format!("{}: {}", &msg[(loc + 4)..], &msg[0..loc])
+  } else {
+    format!("{}: {}", path, msg)
+  }
+}
+
+pub fn pretty_error(msg: &String, path: &String) -> String {
+  if msg.contains(path) {
+    msg.clone()
+  } else {
+    format!("{} at {}", msg, path)
+  }
+}
+
 pub fn get_media_type(p: &Path) -> MediaType {
   match p.extension().and_then(|e| e.to_str()) {
     Some("tsx") => MediaType::Tsx,

@@ -26,7 +26,7 @@ fn print_compact(
     .iter()
     .map(|diagnostic| {
       let s = format!(
-        "{}:{}:{} {} ({})",
+        "{}:{}:{}: {} ({})",
         filename,
         diagnostic.range.start.line_index + 1,
         diagnostic.range.start.column_index + 1,
