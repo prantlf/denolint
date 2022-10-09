@@ -16,6 +16,7 @@ Options:
   -p|--project <directory>       project root directory (default: cwd)
   -c|--config <file>             config file (default: .denolint.json)
   --no-config                    disable searching for the default config
+  --dry-run                      print matching files instead of checking
   -V|--version                   print version number and exit
   -h|--help                      print usage instructions and exit
 
@@ -35,6 +36,7 @@ fn main() -> ExitCode {
   let mut dirs = vec![];
   let mut ignore_patterns = vec![];
   let mut format: Option<String> = None;
+  let mut dry_run: Option<bool> = None;
 
   let args: Vec<String> = env::args().collect();
   let mut i = 1;
@@ -77,6 +79,12 @@ fn main() -> ExitCode {
       "--no-config" => {
         config_path = Some("".to_owned());
       }
+      "--dry-run" => {
+        dry_run = Some(true);
+      }
+      "--no-dry-run" => {
+        dry_run = Some(false);
+      }
       "-h" | "--help" => {
         help();
         return ExitCode::from(0);
@@ -96,6 +104,7 @@ fn main() -> ExitCode {
     Some(dirs),
     Some(ignore_patterns),
     format,
+    dry_run,
   ) {
     Ok(ok) => ExitCode::from(if ok { 0 } else { 1 }),
     Err(e) => {

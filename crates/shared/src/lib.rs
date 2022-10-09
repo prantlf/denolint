@@ -28,7 +28,7 @@ fn lint_file(
   let file_content = fs::read_to_string(&p).map_err(|e| {
     Error::new(
       ErrorKind::Other,
-      format!("Read file {:?} failed: {}", &p, e),
+      format!("Reading file {:?} failed: {}", &p, e),
     )
   })?;
 
@@ -46,7 +46,7 @@ fn lint_file(
         .ok_or_else(|| {
           Error::new(
             ErrorKind::Other,
-            format!("Convert path to string failed: {:?}", &name),
+            format!("Converting path to string failed: {:?}", &name),
           )
         })?
         .to_owned(),
@@ -79,12 +79,17 @@ pub fn denolint(
   scan_dirs: Option<Vec<String>>,
   ignore_patterns: Option<Vec<String>>,
   format: Option<String>,
+  dry_run: Option<bool>,
 ) -> Result<bool, Error> {
   let mut ok = true;
   let has_proj: bool;
 
-  let cwd = env::current_dir()
-    .map_err(|e| Error::new(ErrorKind::Other, format!("Get current_dir failed {}", e)))?;
+  let cwd = env::current_dir().map_err(|e| {
+    Error::new(
+      ErrorKind::Other,
+      format!("Getting current_dir failed {}", e),
+    )
+  })?;
   let proj = match proj_dir {
     Some(s) => {
       has_proj = true;
@@ -133,14 +138,20 @@ pub fn denolint(
     Ok(_) => denolint_ignore_file.as_path().to_str().ok_or_else(|| {
       Error::new(
         ErrorKind::Other,
-        format!("Convert path to string failed: {:?}", &denolint_ignore_file),
+        format!(
+          "Converting path to string failed: {:?}",
+          &denolint_ignore_file
+        ),
       )
     })?,
     Err(_) => match fs::File::open(&eslint_ignore_file) {
       Ok(_) => eslint_ignore_file.as_path().to_str().ok_or_else(|| {
         Error::new(
           ErrorKind::Other,
-          format!("Convert path to string failed: {:?}", &eslint_ignore_file),
+          format!(
+            "Converting path to string failed: {:?}",
+            &eslint_ignore_file
+          ),
         )
       })?,
       Err(_) => "",
@@ -186,6 +197,8 @@ pub fn denolint(
     }
   }
 
+  let no_lint = dry_run.unwrap_or_default();
+
   if !dirs.is_empty() || scan.is_empty() && cfg_add_files.is_empty() {
     let root = if has_proj || dirs.is_empty() || scan.is_empty() {
       proj.clone()
@@ -229,23 +242,47 @@ pub fn denolint(
     for entry in dir_walker.build().filter_map(|v| v.ok()) {
       let p = entry.path();
       if p.is_file() {
-        match lint_file(p, &proj, rules.clone(), format.clone()) {
-          Ok(b) => ok = ok && b,
-          Err(e) => {
-            eprintln!("{e}\n");
-            ok = false
+        if no_lint {
+          let name = media::make_relative(p, &proj);
+          println!(
+            "{}",
+            name
+              .as_path()
+              .to_str()
+              .unwrap_or_else(|| { panic!("Converting path to string failed: {:?}", p) })
+          )
+        } else {
+          match lint_file(p, &proj, rules.clone(), format.clone()) {
+            Ok(b) => ok = ok && b,
+            Err(e) => {
+              eprintln!("{e}\n");
+              ok = false
+            }
           }
         }
       }
     }
   }
 
-  for i in &files {
-    match lint_file(Path::new(i), &proj, rules.clone(), format.clone()) {
-      Ok(b) => ok = ok && b,
-      Err(e) => {
-        eprintln!("{e}\n");
-        ok = false
+  if no_lint {
+    for i in &files {
+      let name = media::make_relative(Path::new(i), &proj);
+      println!(
+        "{}",
+        name
+          .as_path()
+          .to_str()
+          .unwrap_or_else(|| { panic!("Converting path to string failed: {:?}", i) })
+      );
+    }
+  } else {
+    for i in &files {
+      match lint_file(Path::new(i), &proj, rules.clone(), format.clone()) {
+        Ok(b) => ok = ok && b,
+        Err(e) => {
+          eprintln!("{e}\n");
+          ok = false
+        }
       }
     }
   }

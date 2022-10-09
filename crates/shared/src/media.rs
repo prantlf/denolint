@@ -56,7 +56,7 @@ pub fn make_absolute_string(p: &String, base: &Path) -> String {
             s.to_string()
           }
         }
-        None => panic!("Convert path to string failed: {:?}", c),
+        None => panic!("Converting path to string failed: {:?}", c),
       }
     }
     Err(_) => p.to_string(),
@@ -74,7 +74,7 @@ pub fn make_relative(p: &Path, base: &Path) -> PathBuf {
         PathBuf::from(s)
       }
     }
-    None => panic!("Convert path to string failed: {:?}", r),
+    None => panic!("Converting path to string failed: {:?}", r),
   }
 }
 
@@ -89,7 +89,7 @@ pub fn make_relative_string(p: &String, base: &Path) -> String {
           s.to_string()
         }
       }
-      None => panic!("Convert path to string failed: {:?}", r),
+      None => panic!("Converting path to string failed: {:?}", r),
     },
     None => p.to_string(),
   }
@@ -108,12 +108,12 @@ pub fn classify_paths(paths: &Vec<String>, base: &Path) -> (Vec<String>, Vec<Str
         if m.is_dir() {
           match path.as_path().to_str() {
             Some(s) => dirs.push(s.to_string()),
-            None => panic!("Convert path to string failed: {:?}", p),
+            None => panic!("Converting path to string failed: {:?}", p),
           }
         } else {
           match path.as_path().to_str() {
             Some(s) => files.push(s.to_string()),
-            None => panic!("Convert path to string failed: {:?}", p),
+            None => panic!("Converting path to string failed: {:?}", p),
           }
         }
       }

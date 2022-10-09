@@ -9,6 +9,7 @@ pub struct DenoLintOptions {
   pub scan_dirs: Option<Vec<String>>,
   pub ignore_patterns: Option<Vec<String>>,
   pub format: Option<String>,
+  pub dry_run: Option<bool>,
 }
 
 struct AsyncDenoLint {
@@ -29,6 +30,7 @@ impl Task for AsyncDenoLint {
         scan_dirs: o.scan_dirs.clone(),
         ignore_patterns: o.ignore_patterns.clone(),
         format: o.format.clone(),
+        dry_run: o.dry_run,
       }),
     )
   }
@@ -64,19 +66,29 @@ fn denolint_sync(
   let scan_dirs: Option<Vec<String>>;
   let ignore_patterns: Option<Vec<String>>;
   let format: Option<String>;
+  let dry_run: Option<bool>;
   match options {
     Some(o) => {
       scan_dirs = o.scan_dirs;
       ignore_patterns = o.ignore_patterns;
       format = o.format;
+      dry_run = o.dry_run;
     }
     None => {
       scan_dirs = None;
       ignore_patterns = None;
       format = None;
+      dry_run = None;
     }
   };
-  match shared::denolint(proj_dir, config_path, scan_dirs, ignore_patterns, format) {
+  match shared::denolint(
+    proj_dir,
+    config_path,
+    scan_dirs,
+    ignore_patterns,
+    format,
+    dry_run,
+  ) {
     Ok(s) => Ok(s),
     Err(e) => Err(Error::new(Status::GenericFailure, format!("{e}"))),
   }

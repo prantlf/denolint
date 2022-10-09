@@ -18,6 +18,7 @@ test('Type declarations for TypeScript', () => {
   denolint('', '', { ignorePatterns: [''] })
   denolint('', '', { format: 'compact' })
   denolint('', '', { format: 'pretty' })
+  denolint('', '', { dryRun: true })
   denolint('', '', {}, aborter.signal)
 
   denolintSync()
@@ -31,6 +32,7 @@ test('Type declarations for TypeScript', () => {
   denolintSync('', '', { ignorePatterns: [''] })
   denolintSync('', '', { format: 'compact' })
   denolintSync('', '', { format: 'pretty' })
+  denolintSync('', '', { dryRun: true })
 
   lint('', '')
   lint('', Buffer.from(''))

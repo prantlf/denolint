@@ -127,6 +127,13 @@ Directories to scan for sources. The project directory will be scanned if none s
 
 File patterns to ignore when the source directories are scanned. I applies only to directories specified on the command line; not to the directories specified by `files.include` from the config file.
 
+### `dryRun`
+
+- Type: `Boolean`
+- Default: `false`
+
+Only lists the files names, which would be processed, without checking their syntax. It can be used to learn what files will be processed.
+
 ### `signal`
 
 - Type: `AbortSignal`

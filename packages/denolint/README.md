@@ -95,6 +95,10 @@ Check out [deno_lint rules] for all rules.
 
 Disables searching for the default config file if no specific config file is provided.
 
+### `--dry-run`
+
+Only lists the files names, which would be processed, without checking their syntax. It can be used to learn what files will be processed.
+
 ### `--help`, `-h`
 
 Prints the usage instructions and exits.

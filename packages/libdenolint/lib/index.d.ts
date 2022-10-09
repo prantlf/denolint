@@ -4,6 +4,7 @@ interface DenoLintOptions {
   scanDirs?: string[],
   ignorePatterns?: string[],
   format?: 'compact' | 'pretty',
+  dryRun?: boolean
 }
 
 export function denolint(
@@ -19,7 +20,7 @@ interface LintOptions {
   allRules?: boolean,
   excludeRules?: string[],
   includeRules?: string[],
-  format?: 'compact' | 'pretty',
+  format?: 'compact' | 'pretty'
 }
 
 export function lint(
