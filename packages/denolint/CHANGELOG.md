@@ -1,3 +1,9 @@
+## [2.0.3](https://github.com/prantlf/denolint/compare/v2.0.2...v2.0.3) (2022-10-16)
+
+### Bug Fixes
+
+* Fix installing bin script on Windows ([8402d71](https://github.com/prantlf/denolint/commit/8402d71eea162343cf38ae6cd76029ecf2b8f152))
+
 ## [2.0.2](https://github.com/prantlf/denolint/compare/v2.0.1...v2.0.2) (2022-10-09)
 
 ### Bug Fixes
