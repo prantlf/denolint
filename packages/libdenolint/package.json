@@ -68,7 +68,7 @@
     }
   },
   "devDependencies": {
-    "@types/node": "^18.8.3",
+    "@types/node": "^18.11.0",
     "libdenolint": "link:",
     "tehanu": "^1.0.1",
     "tehanu-repo-coco": "^1.0.0",
