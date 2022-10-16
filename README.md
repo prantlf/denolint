@@ -91,6 +91,9 @@ Consolidate `CHANGELOG.md` and commit the changes with one of the following mess
     g c -am 'chore(release): publish both X.Y.Z'
     g c -am 'chore(release): publish denolint X.Y.Z'
     g c -am 'chore(release): publish libdenolint X.Y.Z'
+    g t vX.Y.Z
+    g p
+    and create a GitHub release
 
 ## License
 
