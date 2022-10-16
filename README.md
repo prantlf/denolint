@@ -78,6 +78,20 @@ See more information about the packages and their compatibility with [@node-rs/d
 
 In lieu of a formal styleguide, take care to maintain the existing coding style. Add unit tests for any new or changed functionality. Lint and test your code.
 
+### Publishing
+
+This is for me :-)
+
+Change directory to `packages/denolint` and/or `packages/libdenolint` depending on what packages you want to publish and run:
+
+    npm version --no-git-tag-version X.Y.Z
+
+Consolidate `CHANGELOG.md` and commit the changes with one of the following messages, depending on what packages you want to publish:
+
+    g c -am 'chore(release): publish both X.Y.Z'
+    g c -am 'chore(release): publish denolint X.Y.Z'
+    g c -am 'chore(release): publish libdenolint X.Y.Z'
+
 ## License
 
 Copyright (c) 2020-2022 LongYinan<br>

@@ -8,8 +8,3 @@ codegen-units = 4
 lto = true
 overflow-checks = false
 strip = 'symbols'
-
-# npm version --no-git-tag-version
-# g c -am 'chore(release): publish both '
-# g c -am 'chore(release): publish denolint '
-# g c -am 'chore(release): publish libdenolint '
