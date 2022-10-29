@@ -1,4 +1,10 @@
-## [2.0.2](https://github.com/prantlf/denolint/compare/v2.0.1...v2.0.2) (2022-10-09)
+## [2.0.4](https://github.com/prantlf/denolint/compare/v2.0.2...v2.0.4) (2022-10-29)
+
+### Bug Fixes
+
+* Upgrade dependencies ([2b89960](https://github.com/prantlf/denolint/commit/2b8996029dfdca64ab784fc50c781377d90ca055))
+
+## [2.0.2](https://github.com/prantlf/denolint/compare/v2.0.0...v2.0.2) (2022-10-09)
 
 ### Bug Fixes
 
@@ -64,7 +70,7 @@ The interface of the command-line tool was not affected by this change.
 
 Publish missing native packages.
 
-# [1.1.0](https://github.com/prantlf/denolint/compare/v1.0.84...v1.1.0) (2022-09-30)
+# [1.1.0](https://github.com/prantlf/denolint/compare/v1.0.82...v1.1.0) (2022-09-30)
 
 ### Bug Fixes
 
