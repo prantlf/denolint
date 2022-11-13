@@ -10,8 +10,8 @@ crate-type = ["lib"]
 
 [dependencies]
 anyhow = "1.0.66"
-deno_ast = "0.20.0"
-deno_lint = "0.34.0"
+deno_ast = "0.21.0"
+deno_lint = "0.35.0"
 globwalk = "0.8.1"
 ignore = "0.4.18"
 miette = { version = "5.4.1", features = ["fancy-no-backtrace"] }
