@@ -1,10 +1,14 @@
-## [2.0.5](https://github.com/prantlf/denolint/compare/v2.0.4...v2.0.5) (2022-11-13)
+## [2.0.6](https://github.com/prantlf/denolint/compare/v2.0.5...v2.0.6) (2023-01-27)
 
+### Bug Fixes
+
+* Upgrade dependencies ([99af2d4](https://github.com/prantlf/denolint/commit/99af2d4a923088aff516819524a05d4a2b01701f))
+
+## [2.0.5](https://github.com/prantlf/denolint/compare/v2.0.4...v2.0.5) (2022-11-13)
 
 ### Bug Fixes
 
 * Upgrade dependencies ([e87cd5a](https://github.com/prantlf/denolint/commit/e87cd5a64730703f9d164bb2fd1940fea05a59e1))
-
 
 ## [2.0.4](https://github.com/prantlf/denolint/compare/v2.0.2...v2.0.4) (2022-10-29)
 
