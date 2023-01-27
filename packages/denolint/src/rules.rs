@@ -35,11 +35,11 @@ pub fn print_rules<F: RuleFormatter>(mut rules: Vec<Rule>) {
 
   match F::format(&mut rules) {
     Err(e) => {
-      eprintln!("{}", e);
+      eprintln!("{e}");
       std::process::exit(1);
     }
     Ok(text) => {
-      println!("{}", text);
+      println!("{text}");
     }
   }
 }

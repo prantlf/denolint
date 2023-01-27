@@ -110,7 +110,7 @@ fn lint_sync(
     Either::B(b) => str::from_utf8(b.as_ref()).map_err(|e| {
       Error::new(
         Status::StringExpected,
-        format!("Input source is not valid utf8 string {}", e),
+        format!("Input source is not valid utf8 string {e}"),
       )
     })?,
   };

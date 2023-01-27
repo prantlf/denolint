@@ -25,7 +25,7 @@ fn lint_file(
   rules: Vec<Arc<dyn LintRule>>,
   format: Option<String>,
 ) -> Result<bool, Error> {
-  let file_content = fs::read_to_string(&p).map_err(|e| {
+  let file_content = fs::read_to_string(p).map_err(|e| {
     Error::new(
       ErrorKind::Other,
       format!("Reading file {:?} failed: {}", &p, e),
@@ -79,12 +79,8 @@ pub fn denolint(
   let mut ok = true;
   let has_proj: bool;
 
-  let cwd = env::current_dir().map_err(|e| {
-    Error::new(
-      ErrorKind::Other,
-      format!("Getting current_dir failed {}", e),
-    )
-  })?;
+  let cwd = env::current_dir()
+    .map_err(|e| Error::new(ErrorKind::Other, format!("Getting current_dir failed {e}")))?;
   let proj = match proj_dir {
     Some(s) => {
       has_proj = true;
@@ -117,17 +113,17 @@ pub fn denolint(
 
   type_builder
     .add("typescript", "*.ts")
-    .map_err(|e| Error::new(ErrorKind::Other, format!("{}", e)))?;
+    .map_err(|e| Error::new(ErrorKind::Other, format!("{e}")))?;
   type_builder
     .add("typescript", "*.tsx")
-    .map_err(|e| Error::new(ErrorKind::Other, format!("{}", e)))?;
+    .map_err(|e| Error::new(ErrorKind::Other, format!("{e}")))?;
 
   let types = type_builder
     .add_defaults()
     .select("typescript")
     .select("js")
     .build()
-    .map_err(|e| Error::new(ErrorKind::Other, format!("{}", e)))?;
+    .map_err(|e| Error::new(ErrorKind::Other, format!("{e}")))?;
 
   let ignore_file_path = match fs::File::open(&denolint_ignore_file) {
     Ok(_) => denolint_ignore_file.as_path().to_str().ok_or_else(|| {
@@ -182,13 +178,10 @@ pub fn denolint(
   #[allow(clippy::needless_range_loop)]
   for i in 0..patterns.len() {
     let pattern = &patterns[i];
-    match pattern.chars().position(|c| c == '*') {
-      Some(p) => {
-        dirs.push(pattern.chars().take(p).collect());
-        let s: String = pattern.chars().skip(p).collect();
-        let _ = mem::replace(&mut patterns[i], s);
-      }
-      None => {}
+    if let Some(p) = pattern.chars().position(|c| c == '*') {
+      dirs.push(pattern.chars().take(p).collect());
+      let s: String = pattern.chars().skip(p).collect();
+      let _ = mem::replace(&mut patterns[i], s);
     }
   }
 
@@ -213,11 +206,11 @@ pub fn denolint(
         p.push_str(media::make_relative_string(i, root.as_path()).as_str());
         overrides
           .add(&p)
-          .unwrap_or_else(|e| panic!("Adding exclude pattern {:?} failed: {}", i, e));
+          .unwrap_or_else(|e| panic!("Adding exclude pattern {i:?} failed: {e}"));
       }
       let o = overrides
         .build()
-        .unwrap_or_else(|e| panic!("Applying files.exclude from {:?} failed: {}", config, e));
+        .unwrap_or_else(|e| panic!("Applying files.exclude from {config:?} failed: {e}"));
       dir_walker.overrides(o);
     }
     for i in dirs.into_iter().skip(1) {
@@ -228,11 +221,11 @@ pub fn denolint(
       for i in &patterns {
         overrides
           .add(media::make_relative_string(i, &root).as_str())
-          .unwrap_or_else(|e| panic!("Adding include pattern {:?} failed: {}", i, e));
+          .unwrap_or_else(|e| panic!("Adding include pattern {i:?} failed: {e}"));
       }
       let o = overrides
         .build()
-        .unwrap_or_else(|e| panic!("Applying files.include from {:?} failed: {}", config, e));
+        .unwrap_or_else(|e| panic!("Applying files.include from {config:?} failed: {e}"));
       dir_walker.overrides(o);
     }
     for entry in dir_walker.build().filter_map(|v| v.ok()) {
@@ -245,7 +238,7 @@ pub fn denolint(
             name
               .as_path()
               .to_str()
-              .unwrap_or_else(|| { panic!("Converting path to string failed: {:?}", p) })
+              .unwrap_or_else(|| { panic!("Converting path to string failed: {p:?}") })
           )
         } else {
           match lint_file(p, &proj, rules.clone(), format.clone()) {
@@ -255,7 +248,7 @@ pub fn denolint(
                 let name = media::make_relative(p, &proj)
                   .as_path()
                   .to_str()
-                  .unwrap_or_else(|| panic!("Converting path to string failed: {:?}", p))
+                  .unwrap_or_else(|| panic!("Converting path to string failed: {p:?}"))
                   .to_string();
                 media::compact_error(&e.to_string(), &name)
               } else {

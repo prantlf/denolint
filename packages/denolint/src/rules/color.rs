@@ -152,7 +152,7 @@ impl MarkdownColorizer {
         if is_start {
           if_chain! {
             if let CodeBlockKind::Fenced(info) = kind;
-            if let Some(media_type) = try_code_block_to_media_type(&**info);
+            if let Some(media_type) = try_code_block_to_media_type(info);
             then {
               self.code_block = Some(CodeBlockLang::Known(media_type))
             } else {
@@ -197,7 +197,7 @@ impl MarkdownColorizer {
       Link(_link_type, url, _title) => {
         if !is_start {
           use std::fmt::Write;
-          write!(self.buffer, "({})", url).unwrap();
+          write!(self.buffer, "({url})").unwrap();
         }
         vec![]
       }

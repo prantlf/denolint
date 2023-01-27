@@ -6,10 +6,10 @@ use deno_ast::MediaType;
 use pathdiff;
 
 pub fn compact_error(msg: &String, path: &String) -> String {
-  if let Some(loc) = msg.find(format!(" at {}", path).as_str()) {
+  if let Some(loc) = msg.find(format!(" at {path}").as_str()) {
     format!("{}: {}", &msg[(loc + 4)..], &msg[0..loc])
   } else {
-    format!("{}: {}", path, msg)
+    format!("{path}: {msg}")
   }
 }
 
@@ -17,7 +17,7 @@ pub fn pretty_error(msg: &String, path: &String) -> String {
   if msg.contains(path) {
     msg.clone()
   } else {
-    format!("{} at {}", msg, path)
+    format!("{msg} at {path}")
   }
 }
 
@@ -72,7 +72,7 @@ pub fn make_absolute_string(p: &String, base: &Path) -> String {
             s.to_string()
           }
         }
-        None => panic!("Converting path to string failed: {:?}", c),
+        None => panic!("Converting path to string failed: {c:?}"),
       }
     }
     Err(_) => p.to_string(),
@@ -90,7 +90,7 @@ pub fn make_relative(p: &Path, base: &Path) -> PathBuf {
         PathBuf::from(s)
       }
     }
-    None => panic!("Converting path to string failed: {:?}", r),
+    None => panic!("Converting path to string failed: {r:?}"),
   }
 }
 
@@ -105,7 +105,7 @@ pub fn make_relative_string(p: &String, base: &Path) -> String {
           s.to_string()
         }
       }
-      None => panic!("Converting path to string failed: {:?}", r),
+      None => panic!("Converting path to string failed: {r:?}"),
     },
     None => p.to_string(),
   }
@@ -124,12 +124,12 @@ pub fn classify_paths(paths: &Vec<String>, base: &Path) -> (Vec<String>, Vec<Str
         if m.is_dir() {
           match path.as_path().to_str() {
             Some(s) => dirs.push(s.to_string()),
-            None => panic!("Converting path to string failed: {:?}", p),
+            None => panic!("Converting path to string failed: {p:?}"),
           }
         } else {
           match path.as_path().to_str() {
             Some(s) => files.push(s.to_string()),
-            None => panic!("Converting path to string failed: {:?}", p),
+            None => panic!("Converting path to string failed: {p:?}"),
           }
         }
       }

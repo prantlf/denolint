@@ -93,7 +93,7 @@ fn resolve_file_paths(config: &FilesConfig) -> Result<Vec<PathBuf>, AnyError> {
       if exclude.starts_with('!') {
         exclude
       } else {
-        format!("!{}", exclude)
+        format!("!{exclude}")
       }
     }));
 
