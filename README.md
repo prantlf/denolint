@@ -98,7 +98,7 @@ Consolidate `CHANGELOG.md` and commit the changes with one of the following mess
 ## License
 
 Copyright (c) 2020-2022 LongYinan<br>
-Copyright (c) 2022 Ferdinand Prantl
+Copyright (c) 2023 Ferdinand Prantl
 
 Licensed under the [MIT] license.
 
