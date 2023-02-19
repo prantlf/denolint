@@ -1,4 +1,4 @@
-import { denolint, denolintSync, lint, lintSync } from 'libdenolint'
+import { denolint, denolintSync, lint, lintSync } from '..'
 
 declare type testCallback = () => void
 // eslint-disable-next-line no-unused-vars

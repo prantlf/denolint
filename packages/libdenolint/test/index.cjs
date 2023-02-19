@@ -2,7 +2,7 @@ const { ok, rejects, strictEqual, throws } = require('assert')
 const { join } = require('path')
 const { readFile } = require('fs/promises')
 const test = require('tehanu')(__filename)
-const { denolint, denolintSync, lint, lintSync } = require('libdenolint')
+const { denolint, denolintSync, lint, lintSync } = require('..')
 
 let files, pass, warn, fail
 
