@@ -82,6 +82,19 @@ In lieu of a formal styleguide, take care to maintain the existing coding style.
 
 This is for me :-)
 
+Upgrading:
+
+    pnpm i
+    cargo update
+    cargo upgrade --incompatible
+    cargo clippy
+    cd packages/denolint
+    npm run build
+    npm run test:other
+    cd ../libdenolint
+    npm run build
+    npm run test:other
+
 Change directory to `packages/denolint` and/or `packages/libdenolint` depending on what packages you want to publish and run:
 
     npm version --no-git-tag-version X.Y.Z

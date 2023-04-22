@@ -6,7 +6,6 @@ use std::mem;
 use std::path;
 use std::path::Path;
 use std::path::PathBuf;
-use std::sync::Arc;
 
 use deno_lint::linter::LinterBuilder;
 use deno_lint::rules::get_recommended_rules;
@@ -22,7 +21,7 @@ pub mod media;
 fn lint_file(
   p: &Path,
   base: &Path,
-  rules: Vec<Arc<dyn LintRule>>,
+  rules: Vec<&'static dyn LintRule>,
   format: Option<String>,
 ) -> Result<bool, Error> {
   let file_content = fs::read_to_string(p).map_err(|e| {

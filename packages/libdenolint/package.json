@@ -68,11 +68,11 @@
     }
   },
   "devDependencies": {
-    "@types/node": "^18.11.18",
+    "@types/node": "^18.15.13",
     "tehanu": "^1.0.1",
     "tehanu-repo-coco": "^1.0.0",
     "tehanu-teru": "^1.0.0",
-    "typescript": "^4.9.4"
+    "typescript": "^5.0.4"
   },
   "keywords": [
     "deno-lint",
