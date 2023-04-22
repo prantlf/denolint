@@ -3,6 +3,7 @@ extern crate napi_derive;
 use napi::bindgen_prelude::*;
 use napi::{Env, Result, Task};
 use napi_derive::*;
+use shared::diagnostics::is_compact;
 
 #[napi(object)]
 pub struct DenoLintOptions {
@@ -81,15 +82,18 @@ fn denolint_sync(
       dry_run = None;
     }
   };
-  match shared::denolint(
-    proj_dir,
-    config_path,
-    scan_dirs,
-    ignore_patterns,
-    format,
-    dry_run,
-  ) {
-    Ok(s) => Ok(s),
-    Err(e) => Err(Error::new(Status::GenericFailure, format!("{e}"))),
+  match is_compact(format) {
+    Ok(compact) => match shared::denolint(
+      proj_dir,
+      config_path,
+      scan_dirs,
+      ignore_patterns,
+      compact,
+      dry_run,
+    ) {
+      Ok(s) => Ok(s),
+      Err(e) => Err(Error::new(Status::GenericFailure, format!("{e}"))),
+    },
+    Err(err) => Err(Error::new(Status::InvalidArg, err.to_string())),
   }
 }

@@ -39,11 +39,22 @@ test('sync lint passes', () => {
 })
 
 test('sync lint warns', () => {
-  strictEqual(lintSync('warn.js', warn).length, 2)
+  const warnings = lintSync('warn.js', warn)
+  strictEqual(warnings.length, 2)
 })
 
 test('sync lint fails', () => {
-  throws(() => lintSync('fail.js', fail))
+  throws(
+    () => lintSync('fail.js', fail),
+    new Error('Expression expected at fail.js:4:3\n\n    return answer\n    ~~~~~~'),
+  )
+})
+
+test('sync lint fails with a compact message', () => {
+  throws(
+    () => lintSync('fail.js', fail, { format: 'compact' }),
+    new Error('fail.js:4:3: Expression expected: return answer'),
+  )
 })
 
 test('async denolint passes', async () => {
@@ -68,4 +79,8 @@ test('sync denolint warns', async () => {
 
 test('sync denolint fails', async () => {
   ok(!denolintSync(join(files, 'fail')))
+})
+
+test('sync denolint fails with compact message', async () => {
+  ok(!denolintSync(join(files, 'fail'), '', { format: 'compact' }))
 })

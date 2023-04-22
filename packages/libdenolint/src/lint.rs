@@ -10,7 +10,7 @@ use napi::{Env, Result, Task};
 use napi_derive::*;
 
 use shared::config;
-use shared::diagnostics;
+use shared::diagnostics::{display_diagnostics, is_compact};
 use shared::media;
 
 #[napi(object)]
@@ -94,6 +94,13 @@ fn lint_sync(
       format = None;
     }
   };
+
+  let compact_result = is_compact(format);
+  if let Err(err) = compact_result {
+    return Err(Error::new(Status::InvalidArg, err.to_string()));
+  }
+  let compact = compact_result.unwrap();
+
   let linter = LinterBuilder::default()
     .rules(config::filter_rules(
       all_rules.unwrap_or(false),
@@ -120,15 +127,10 @@ fn lint_sync(
     .map_err(|e| {
       Error::new(
         Status::GenericFailure,
-        media::pretty_error(&e.to_string(), &file_name),
+        media::format_error(compact, &e.to_string(), &file_name),
       )
     })?;
 
-  diagnostics::display_diagnostics(
-    &file_diagnostics,
-    s.text_info(),
-    &file_name,
-    format.as_deref(),
-  )
-  .map_err(|err| Error::new(Status::GenericFailure, format!("{err}")))
+  display_diagnostics(&file_diagnostics, s.text_info(), &file_name, compact)
+    .map_err(|err| Error::new(Status::GenericFailure, format!("{err}")))
 }

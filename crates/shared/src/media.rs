@@ -5,9 +5,47 @@ use std::path::PathBuf;
 use deno_ast::MediaType;
 use pathdiff;
 
+pub fn format_error(compact: bool, msg: &String, path: &String) -> String {
+  if compact {
+    compact_error(msg, path)
+  } else {
+    pretty_error(msg, path)
+  }
+}
+
 pub fn compact_error(msg: &String, path: &String) -> String {
   if let Some(loc) = msg.find(format!(" at {path}").as_str()) {
-    format!("{}: {}", &msg[(loc + 4)..], &msg[0..loc])
+    let from_loc = &msg[(loc + 4)..];
+    let parts = from_loc.lines().collect::<Vec<_>>();
+    if parts.len() == 1 {
+      // Single-line message with the location at the end, for example:
+      // Unexpected token `return`. Expected this... at test/samples/fail/ultimate.txt:4:3
+      // Output:
+      // test/samples/fail/ultimate.txt:4:3: Expected this...
+      format!("{}: {}", &parts[0], &msg[0..loc])
+    } else {
+      // Multi-line message with the location at the firsts line, for example:
+      // Expression expected at test/samples/fail/ultimate.txt:4:3
+      //
+      //     return answer
+      //     ~~~~~~
+      // Output:
+      // test/samples/fail/ultimate.txt:4:3: Expression expected: return answer
+      let path_with_loc = parts[0];
+      let code_lines = &parts[1..];
+      let mut code = String::new();
+      for line in code_lines {
+        let trimmed = line.trim();
+        if !trimmed.is_empty() && !trimmed.chars().all(|x| x == '~') {
+          if code.is_empty() {
+            code.push(':');
+          }
+          code.push(' ');
+          code.push_str(trimmed);
+        }
+      }
+      format!("{}: {}{}", path_with_loc, &msg[0..loc], &code)
+    }
   } else {
     format!("{path}: {msg}")
   }

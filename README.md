@@ -87,7 +87,10 @@ Upgrading:
     pnpm i
     cargo update
     cargo upgrade --incompatible
-    cargo clippy
+    pnpm run lint
+    cargo fmt --all
+    cargo clippy -- -D warnings
+
     cd packages/denolint
     npm run build
     npm run test:other

@@ -22,7 +22,7 @@ fn lint_file(
   p: &Path,
   base: &Path,
   rules: Vec<&'static dyn LintRule>,
-  format: Option<String>,
+  compact: bool,
 ) -> Result<bool, Error> {
   let file_content = fs::read_to_string(p).map_err(|e| {
     Error::new(
@@ -51,16 +51,12 @@ fn lint_file(
   let (s, file_diagnostics) = linter.lint(file_name.clone(), file_content).map_err(|e| {
     Error::new(
       ErrorKind::Other,
-      media::pretty_error(&e.to_string(), &file_name.clone()),
+      media::format_error(compact, &e.to_string(), &file_name.clone()),
     )
   })?;
-  for issue in diagnostics::display_diagnostics(
-    &file_diagnostics,
-    s.text_info(),
-    &file_name,
-    format.as_deref(),
-  )
-  .map_err(|err| Error::new(ErrorKind::Other, format!("{err}")))?
+  for issue in
+    diagnostics::display_diagnostics(&file_diagnostics, s.text_info(), &file_name, compact)
+      .map_err(|err| Error::new(ErrorKind::Other, format!("{err}")))?
   {
     eprintln!("{issue}")
   }
@@ -72,7 +68,7 @@ pub fn denolint(
   config_path: Option<String>,
   scan_dirs: Option<Vec<String>>,
   ignore_patterns: Option<Vec<String>>,
-  format: Option<String>,
+  compact: bool,
   dry_run: Option<bool>,
 ) -> Result<bool, Error> {
   let mut ok = true;
@@ -185,7 +181,6 @@ pub fn denolint(
   }
 
   let no_lint = dry_run.unwrap_or_default();
-  let wants_compact = format.clone().unwrap_or_default() == "compact";
 
   if !dirs.is_empty() || scan.is_empty() && cfg_add_files.is_empty() {
     let root = if has_proj || dirs.is_empty() || scan.is_empty() {
@@ -240,21 +235,12 @@ pub fn denolint(
               .unwrap_or_else(|| { panic!("Converting path to string failed: {p:?}") })
           )
         } else {
-          match lint_file(p, &proj, rules.clone(), format.clone()) {
+          match lint_file(p, &proj, rules.clone(), compact) {
             Ok(b) => ok = ok && b,
             Err(e) => {
-              let msg = if wants_compact {
-                let name = media::make_relative(p, &proj)
-                  .as_path()
-                  .to_str()
-                  .unwrap_or_else(|| panic!("Converting path to string failed: {p:?}"))
-                  .to_string();
-                media::compact_error(&e.to_string(), &name)
-              } else {
-                e.to_string()
-              };
+              let msg = e.to_string();
               eprintln!("{msg}");
-              if !wants_compact {
+              if !compact {
                 eprintln!();
               }
               ok = false
@@ -271,17 +257,12 @@ pub fn denolint(
     }
   } else {
     for i in &files {
-      match lint_file(Path::new(i), &proj, rules.clone(), format.clone()) {
+      match lint_file(Path::new(i), &proj, rules.clone(), compact) {
         Ok(b) => ok = ok && b,
         Err(e) => {
-          let msg = if wants_compact {
-            let name = media::make_relative_string(i, &proj);
-            media::compact_error(&e.to_string(), &name)
-          } else {
-            e.to_string()
-          };
+          let msg = e.to_string();
           eprintln!("{msg}");
-          if !wants_compact {
+          if !compact {
             eprintln!();
           }
           ok = false

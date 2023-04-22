@@ -3,18 +3,35 @@ use deno_ast::SourceRange;
 use deno_ast::SourceRanged;
 use deno_ast::SourceTextInfo;
 use deno_lint::diagnostic::LintDiagnostic;
+
 use std::fmt::{self, Display};
+use std::io::Error;
+use std::io::ErrorKind;
+
+pub fn is_compact(format: Option<String>) -> Result<bool, Error> {
+  match format.as_deref() {
+    Some("compact") => Ok(true),
+    Some("pretty") | None => Ok(false),
+    _ => Err(Error::new(
+      ErrorKind::Other,
+      format!(
+        "Invalid output format specified: {}",
+        format.unwrap_or_default()
+      ),
+    )),
+  }
+}
 
 pub fn display_diagnostics(
   diagnostics: &[LintDiagnostic],
   source_file: &SourceTextInfo,
   filename: &str,
-  format: Option<&str>,
+  compact: bool,
 ) -> Result<Vec<String>, fmt::Error> {
-  match format {
-    Some("compact") => print_compact(diagnostics, filename),
-    Some("pretty") | None => print_pretty(diagnostics, source_file, filename),
-    _ => unreachable!("Invalid output format specified"),
+  if compact {
+    print_compact(diagnostics, filename)
+  } else {
+    print_pretty(diagnostics, source_file, filename)
   }
 }
 

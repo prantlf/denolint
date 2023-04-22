@@ -4,6 +4,8 @@ extern crate shared;
 use std::env;
 use std::process::ExitCode;
 
+use shared::diagnostics::is_compact;
+
 mod rules;
 
 fn help() {
@@ -110,6 +112,12 @@ fn main() -> ExitCode {
     i += 1;
   }
 
+  let compact = is_compact(format);
+  if let Err(err) = compact {
+    eprintln!("{err}");
+    return ExitCode::from(1);
+  }
+
   if let Some(rule_name) = show_rule {
     let rules = if rule_name.is_empty() {
       rules::get_all_rules_metadata()
@@ -124,7 +132,7 @@ fn main() -> ExitCode {
       config_path,
       Some(dirs),
       Some(ignore_patterns),
-      format,
+      compact.unwrap(),
       dry_run,
     ) {
       Ok(ok) => ExitCode::from(if ok { 0 } else { 1 }),
