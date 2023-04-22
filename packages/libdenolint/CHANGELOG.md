@@ -1,3 +1,12 @@
+## [2.0.9](https://github.com/prantlf/denolint/compare/v2.0.8...v2.0.9) (2023-04-22)
+
+
+### Bug Fixes
+
+* Ensure that compact errors stay on the one line ([c911abd](https://github.com/prantlf/denolint/commit/c911abd4244288bb8afec51fffbba49afd950ce9))
+
+
+
 ## [2.0.8](https://github.com/prantlf/denolint/compare/v2.0.7...v2.0.8) (2023-04-22)
 
 

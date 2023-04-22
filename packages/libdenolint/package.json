@@ -1,6 +1,6 @@
 {
   "name": "libdenolint",
-  "version": "2.0.8",
+  "version": "2.0.9",
   "description": "Deno lint library binding for Node.js",
   "homepage": "https://github.com/prantlf/denolint#readme",
   "author": "Ferdinand Prantl <prantlf@gmail.com>",
