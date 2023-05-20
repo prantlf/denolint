@@ -68,7 +68,7 @@
     }
   },
   "devDependencies": {
-    "@types/node": "^18.15.13",
+    "@types/node": "^20.2.1",
     "tehanu": "^1.0.1",
     "tehanu-repo-coco": "^1.0.0",
     "tehanu-teru": "^1.0.0",

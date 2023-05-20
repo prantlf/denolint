@@ -1,4 +1,5 @@
 .DS_Store
+.eslintcache
 Cargo.lock
 *.log
 node_modules

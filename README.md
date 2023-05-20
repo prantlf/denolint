@@ -84,12 +84,20 @@ This is for me :-)
 
 Upgrading:
 
+    cd packages/libdenolint
+    ncu -u
+    pnpm i
+    cd ../..
+    ncu -u
     pnpm i
     cargo update
     cargo upgrade --incompatible
     pnpm run lint
     cargo fmt --all
     cargo clippy -- -D warnings
+    cargo outdated --exit-code 1
+    cargo audit
+    cargo pants
 
     cd packages/denolint
     npm run build

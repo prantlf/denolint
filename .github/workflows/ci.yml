@@ -136,12 +136,14 @@ jobs:
       - name: Install PNPM
         uses: pnpm/action-setup@v2
         with:
-          version: '7'
+          version: latest
+          run_install: |
+            - args: [--frozen-lockfile, --no-verify-store-integrity]
 
       - name: Install Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 16
+          node-version: 'lts/*'
           check-latest: true
           cache: pnpm
           cache-dependency-path: pnpm-lock.yaml
@@ -314,7 +316,10 @@ jobs:
       - name: Install PNPM
         uses: pnpm/action-setup@v2
         with:
-          version: '7'
+          # 8 will be possible when node 14 gets dropped
+          version: 7
+          run_install: |
+            - args: [--frozen-lockfile, --no-verify-store-integrity]
 
       - name: Install Node.js
         uses: actions/setup-node@v3
