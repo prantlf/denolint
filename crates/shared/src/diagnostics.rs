@@ -1,6 +1,5 @@
 // Copyright 2020-2021 the Deno authors. All rights reserved. MIT license.
 use deno_ast::SourceRange;
-use deno_ast::SourceRanged;
 use deno_ast::SourceTextInfo;
 use deno_lint::diagnostic::LintDiagnostic;
 
@@ -159,8 +158,8 @@ impl miette::SourceCode for MietteSourceCode<'_> {
     );
     let src_end = self.source.line_end(end_line_index);
     let range = SourceRange::new(src_start, src_end);
-    let src_text = range.text_fast(&self.source);
     let byte_range = range.as_byte_range(start_pos);
+    let src_text = &self.source.text_str()[byte_range.clone()];
     let name = Some(self.filename.to_string());
     let start = miette::SourceOffset::from(byte_range.start);
     let len = miette::SourceOffset::from(byte_range.len());
