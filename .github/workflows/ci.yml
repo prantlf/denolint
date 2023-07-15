@@ -138,7 +138,7 @@ jobs:
         with:
           version: latest
           run_install: |
-            - args: [--frozen-lockfile, --no-verify-store-integrity, --config=auto-install-peers=true]
+            - args: [--frozen-lockfile, --no-verify-store-integrit]
 
       - name: Install Node.js
         uses: actions/setup-node@v3
@@ -190,7 +190,7 @@ jobs:
         shell: bash
 
       - name: Install NPM dependencies
-        run: pnpm i --frozen-lockfile --no-verify-store-integrity --config=auto-install-peers=true
+        run: pnpm i --frozen-lockfile --no-verify-store-integrity
 
       - name: Build
         run: ${{ matrix.settings.build }}
@@ -302,7 +302,7 @@ jobs:
           # - host: windows-latest
           #   target: aarch64-pc-windows-msvc
         node:
-          - '14'
+          #- '14'
           - '16'
           - '18'
 
@@ -316,10 +316,9 @@ jobs:
       - name: Install PNPM
         uses: pnpm/action-setup@v2
         with:
-          # 8 will be possible when node 14 gets dropped
-          version: 7
+          version: latest
           run_install: |
-            - args: [--frozen-lockfile, --no-verify-store-integrity, --config=auto-install-peers=true]
+            - args: [--frozen-lockfile, --no-verify-store-integrit]
 
       - name: Install Node.js
         uses: actions/setup-node@v3
@@ -341,7 +340,7 @@ jobs:
         shell: bash
 
       - name: Install NPM dependencies
-        run: pnpm i --frozen-lockfile --no-verify-store-integrity --config=auto-install-peers=true
+        run: pnpm i --frozen-lockfile --no-verify-store-integrity
 
       - name: Download artifacts
         uses: actions/download-artifact@v3
@@ -389,7 +388,9 @@ jobs:
       - name: Install PNPM
         uses: pnpm/action-setup@v2
         with:
-          version: '7'
+          version: latest
+          run_install: |
+            - args: [--frozen-lockfile, --no-verify-store-integrit]
 
       - name: Install Node.js
         uses: actions/setup-node@v3
@@ -406,7 +407,7 @@ jobs:
           key: x86_64-unknown-linux-gnu-npm-16-${{ hashFiles('pnpm-lock.yaml') }}
 
       - name: Install NPM dependencies
-        run: pnpm i --frozen-lockfile --no-verify-store-integrity --config=auto-install-peers=true
+        run: pnpm i --frozen-lockfile --no-verify-store-integrity
 
       - name: Download all artifacts
         uses: actions/download-artifact@v3
