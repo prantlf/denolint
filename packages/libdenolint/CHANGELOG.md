@@ -1,38 +1,34 @@
-## [2.0.10](https://github.com/prantlf/denolint/compare/v2.0.9...v2.0.10) (2023-05-20)
+# Changes
 
+## [2.0.11](https://github.com/prantlf/denolint/compare/v2.0.10...v2.0.11) (2023-07-15)
+
+### Bug Fixes
+
+* Upgrade dependencies ([1785bf0](https://github.com/prantlf/denolint/commit/1785bf0c640ea40b2ed1c24d5710711064eae9d2))
+
+## [2.0.10](https://github.com/prantlf/denolint/compare/v2.0.9...v2.0.10) (2023-05-20)
 
 ### Bug Fixes
 
 * Upgrade dependencies ([75184a9](https://github.com/prantlf/denolint/commit/75184a9627259a23fb46d80ce446d4eca3f66af2))
 
-
-
 ## [2.0.9](https://github.com/prantlf/denolint/compare/v2.0.8...v2.0.9) (2023-04-22)
-
 
 ### Bug Fixes
 
 * Ensure that compact errors stay on the one line ([c911abd](https://github.com/prantlf/denolint/commit/c911abd4244288bb8afec51fffbba49afd950ce9))
 
-
-
 ## [2.0.8](https://github.com/prantlf/denolint/compare/v2.0.7...v2.0.8) (2023-04-22)
-
 
 ### Bug Fixes
 
 * Upgrade dependencies ([d638547](https://github.com/prantlf/denolint/commit/d638547d805e496f27aa69ff7eda02e4490a61e4))
 
-
-
 ## [2.0.7](https://github.com/prantlf/denolint/compare/v2.0.6...v2.0.7) (2023-02-19)
-
 
 ### Bug Fixes
 
 * Upgrade dependencies ([1be9148](https://github.com/prantlf/denolint/commit/1be9148b092c3c1f84c8a8bc57d0186fa529e582))
-
-
 
 ## [2.0.6](https://github.com/prantlf/denolint/compare/v2.0.5...v2.0.6) (2023-01-27)
 
@@ -58,7 +54,7 @@
 
 * Use the compact format known from unix tools ([335cd8a](https://github.com/prantlf/denolint/commit/335cd8a42270c326af17c406edcdec51cf60f26a))
 
-# [2.0.0](https://github.com/prantlf/denolint/compare/v1.1.6...v2.0.0) (2022-10-09)
+## [2.0.0](https://github.com/prantlf/denolint/compare/v1.1.6...v2.0.0) (2022-10-09)
 
 ### Features
 
@@ -114,11 +110,11 @@ The interface of the command-line tool was not affected by this change.
 * **libdenolint:** Remove the sel-package link from dev dependencies ([f2cc0fe](https://github.com/prantlf/denolint/commit/f2cc0fe01f9392c95b30477cb3e6f3c8f5caeb10))
 * Separate fatal parser errors with an extra line break ([7ece377](https://github.com/prantlf/denolint/commit/7ece377891fa3039b9c074ba6b481f685e9752e0))
 
-# [1.1.1](https://github.com/prantlf/denolint/compare/v1.1.0...v1.1.1) (2022-10-01)
+## [1.1.1](https://github.com/prantlf/denolint/compare/v1.1.0...v1.1.1) (2022-10-01)
 
 Publish missing native packages.
 
-# [1.1.0](https://github.com/prantlf/denolint/compare/v1.0.82...v1.1.0) (2022-09-30)
+## [1.1.0](https://github.com/prantlf/denolint/compare/v1.0.82...v1.1.0) (2022-09-30)
 
 ### Bug Fixes
 
@@ -153,7 +149,7 @@ Publish missing native packages.
 
 * Install platform packages using optional dependencies ([bfaf001](https://github.com/prantlf/denolint/commit/bfaf00136b5462fc216c8cb56d9c95224ecd056f))
 
-# 1.0.0 (2022-09-28)
+## 1.0.0 (2022-09-28)
 
 This is the first version released after forking the [customisation] of the [original project].
 
