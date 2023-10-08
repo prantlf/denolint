@@ -1,5 +1,11 @@
 # Changes
 
+## [2.0.12](https://github.com/prantlf/denolint/compare/v2.0.11...v2.0.12) (2023-10-08)
+
+### Bug Fixes
+
+* Upgrade dependencies ([2e35dba](https://github.com/prantlf/denolint/commit/2e35dbad93f967f476c972bb8b30688ee585a499))
+
 ## [2.0.11](https://github.com/prantlf/denolint/compare/v2.0.10...v2.0.11) (2023-07-15)
 
 ### Bug Fixes
