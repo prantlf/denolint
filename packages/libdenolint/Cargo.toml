@@ -1,16 +1,16 @@
 [package]
 name = "libdenolint"
-version = "2.0.11"
+version = "2.0.12"
 edition = "2021"
 
 [lib]
 crate-type = ["cdylib"]
 
 [dependencies]
-deno_lint = "0.49.0"
+deno_lint = "0.51.0"
 global_alloc = { path = "../../crates/alloc" }
 # Default enable napi4 feature, see https://nodejs.org/api/n-api.html#node-api-version-matrix
-napi = { version = "2.13.2", default-features = false, features = ["napi4"] }
+napi = { version = "2.13.3", default-features = false, features = ["napi4"] }
 napi-derive = "2.13.0"
 shared = { path = "../../crates/shared" }
 
