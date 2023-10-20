@@ -1,7 +1,7 @@
 // Copyright 2020-2021 the Deno authors. All rights reserved. MIT license.
 use deno_ast::{
   lex,
-  swc::parser::token::{Token, Word},
+  swc::parser::token::{IdentLike, Token, Word},
   MediaType, TokenOrComment,
 };
 use if_chain::if_chain;
@@ -279,9 +279,10 @@ fn colorize_code_block(lang: CodeBlockLang, src: &str) -> String {
                 Word::True | Word::False | Word::Null => decorate(&line[range], Attribute::Yellow),
                 Word::Keyword(_) => decorate(&line[range], Attribute::Cyan),
                 Word::Ident(ident) => {
-                  if ident == *"undefined" {
+                  if ident == IdentLike::Known(deno_ast::swc::parser::token::KnownIdent::Undefined)
+                  {
                     decorate(&line[range], Attribute::Gray)
-                  } else if ident == *"Infinity" || ident == *"NaN" {
+                  } else if ident.as_ref() == "Infinity" || ident.as_ref() == "NaN" {
                     decorate(&line[range], Attribute::Yellow)
                   } else if matches!(
                     ident.as_ref(),
