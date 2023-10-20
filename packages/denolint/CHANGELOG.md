@@ -1,3 +1,12 @@
+## [2.0.13](https://github.com/prantlf/denolint/compare/v2.0.12...v2.0.13) (2023-10-20)
+
+
+### Bug Fixes
+
+* Upgrade deno_lint ([4e3e524](https://github.com/prantlf/denolint/commit/4e3e524e600de1b22212246757f52cb96ac2e263))
+
+
+
 # Changes
 
 ## [2.0.12](https://github.com/prantlf/denolint/compare/v2.0.11...v2.0.12) (2023-10-08)
