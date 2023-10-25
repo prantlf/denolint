@@ -6,8 +6,8 @@ edition = "2021"
 [dependencies]
 ansi_term = "0.12.1"
 atty = "0.2.14"
-deno_ast = "0.30.0"
-deno_lint = { version = "0.52.1", features = ["docs"] }
+deno_ast = "0.31.0"
+deno_lint = { version = "0.52.2", features = ["docs"] }
 global_alloc = { path = "../../crates/alloc" }
 if_chain = "1.0.2"
 pulldown-cmark = "0.9.3"
