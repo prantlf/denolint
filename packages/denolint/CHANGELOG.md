@@ -1,13 +1,16 @@
-## [2.0.13](https://github.com/prantlf/denolint/compare/v2.0.12...v2.0.13) (2023-10-20)
+# Changes
 
+## [2.0.14](https://github.com/prantlf/denolint/compare/v2.0.13...v2.0.14) (2023-10-25)
+
+### Bug Fixes
+
+* Upgrade deno_ast ([a8e35e9](https://github.com/prantlf/denolint/commit/a8e35e97d0af66f135f56a622cf842e16cfd0ee3))
+
+## [2.0.13](https://github.com/prantlf/denolint/compare/v2.0.12...v2.0.13) (2023-10-20)
 
 ### Bug Fixes
 
 * Upgrade deno_lint ([4e3e524](https://github.com/prantlf/denolint/commit/4e3e524e600de1b22212246757f52cb96ac2e263))
-
-
-
-# Changes
 
 ## [2.0.12](https://github.com/prantlf/denolint/compare/v2.0.11...v2.0.12) (2023-10-08)
 
